@@ -117,11 +117,13 @@ class JHDateSpec: QuickSpec {
                 }
 
                 it("should return a proper date") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)
+                    let timeZone = NSTimeZone(abbreviation: "GST")
+                    let date = JHDate(year: 1999, month: 12, day: 31, timeZone: timeZone)
                     let components = NSDateComponents()
                     components.year = 1999
                     components.month = 12
                     components.day = 31
+                    components.timeZone = timeZone
                     let expectedDate = date.calendar!.dateFromComponents(components)
 
                     expect(date.date) == expectedDate

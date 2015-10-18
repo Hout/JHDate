@@ -29,8 +29,8 @@ let componentFlagsYWD: NSCalendarUnit = [.Hour, .Minute, .Second, .Nanosecond, .
 
 public class JHDate : Comparable {
 
-    var components: NSDateComponents
-    var strictEvaluation: Bool = false
+    public var components: NSDateComponents
+    public var strictEvaluation: Bool = false
 
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -107,10 +107,12 @@ public class JHDate : Comparable {
         strictEvaluation = date.strictEvaluation
     }
 
-    public class func now() -> JHDate {
+    public class func now(timeZone: NSTimeZone? = nil, calendar: NSCalendar? = nil) -> JHDate {
         let now = NSDate()
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second, .Calendar, .TimeZone], fromDate: now)
+        let theCalendar = calendar ?? NSCalendar.currentCalendar()
+        let theTimeZone = timeZone ?? NSTimeZone.defaultTimeZone()
+        theCalendar.timeZone = theTimeZone
+        let components = theCalendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second, .Calendar, .TimeZone], fromDate: now)
         let date = JHDate(components: components)
         return date
     }
@@ -236,21 +238,20 @@ public extension JHDate {
             }
 
             // Not strict, so return reference date components if they are undefined
-            let referenceComponents = NSDateComponents()
-            referenceComponents.year = 2001
-            referenceComponents.month = 1
-            referenceComponents.day = 1
-            referenceComponents.hour = 0
-            referenceComponents.minute = 0
-            referenceComponents.second = 0
-            referenceComponents.nanosecond = 0
-            referenceComponents.calendar = calendar
-            referenceComponents.timeZone = timeZone
+            let result = NSDateComponents()
+            result.year = 2001
+            result.month = 1
+            result.day = 1
+            result.hour = 0
+            result.minute = 0
+            result.second = 0
+            result.nanosecond = 0
+            result.calendar = calendar
+            result.timeZone = timeZone
 
-            let result = referenceComponents
             for unit in componentFlagSet {
                 let value = self.components.valueForComponent(unit)
-                if value != Int(NSDateComponentUndefined) {
+                if value != NSDateComponentUndefined {
                     result.setValue(value, forComponent: unit)
                 }
             }
@@ -277,7 +278,11 @@ public extension JHDate {
 extension JHDate : CustomStringConvertible {
 
     public var description: String {
-        let dateString = date == nil ? "nil" : date!.description
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "eee dd-MMM-yy GG HH:mm:ss.SSS zzz"
+        dateFormatter.calendar = calendar
+        dateFormatter.timeZone = timeZone
+        let dateString = date == nil ? "nil" : dateFormatter.stringFromDate(date!)
         return "\(components.description)\nStrict evaluation: \(strictEvaluation)\nDate: \(dateString)"
     }
 
@@ -328,7 +333,7 @@ public extension JHDate {
 }
 
 // MARK: - Comparators
-extension JHDate {
+public extension JHDate {
 
     func hasTheSame(unitFlags: NSCalendarUnit, asDate: JHDate) -> Bool {
         for flag in componentFlagSet {
@@ -339,7 +344,7 @@ extension JHDate {
         return true
     }
 
-    func isToday() -> Bool {
+    public func isToday() -> Bool {
         return self.hasTheSame(.Day, asDate: JHDate(date: NSDate()))
     }
 
@@ -388,7 +393,7 @@ extension JHDate {
     }
 }
 
-prefix func --(unit: NSCalendarUnit) -> NSCalendarUnit? {
+public prefix func --(unit: NSCalendarUnit) -> NSCalendarUnit? {
     switch unit {
     case NSCalendarUnit.Era: return .Year
     case NSCalendarUnit.Year: return .Month
@@ -406,11 +411,11 @@ prefix func --(unit: NSCalendarUnit) -> NSCalendarUnit? {
 }
 
 
-func - (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
+public func - (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
     return lhs + (-rhs)
 }
 
-func + (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
+public func + (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
     guard lhs.validDate else {
         return nil
     }
@@ -423,7 +428,7 @@ func + (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
 }
 
 
-prefix func - (dateComponents: NSDateComponents) -> NSDateComponents {
+public prefix func - (dateComponents: NSDateComponents) -> NSDateComponents {
     let result = NSDateComponents()
     for unit in componentFlagSet {
         let value = dateComponents.valueForComponent(unit)
