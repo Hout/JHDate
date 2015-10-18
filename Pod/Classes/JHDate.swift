@@ -16,415 +16,383 @@ import Foundation
 
 
 // For looping through a set of units
-let componentFlagSet: [NSCalendarUnit] = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .YearForWeekOfYear, .WeekOfYear, .Weekday]
+private let componentFlagSet: [NSCalendarUnit] = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .YearForWeekOfYear, .WeekOfYear, .Weekday]
 
 // For selecting all components from a date
-let componentFlags: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar, .YearForWeekOfYear, .WeekOfYear, .Weekday]
+private let componentFlags: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar, .YearForWeekOfYear, .WeekOfYear, .Weekday, .Quarter, .WeekOfMonth]
 
-// For selecting normal year month day components from a date
-let componentFlagsYMD: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar]
+public extension NSDate {
 
-// For selecting week oriented components from a date
-let componentFlagsYWD: NSCalendarUnit = [.Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar, .YearForWeekOfYear, .WeekOfYear, .Weekday]
-
-public class JHDate : Comparable {
-
-    public var components: NSDateComponents
-    public var strictEvaluation: Bool = false
-
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    internal class func defaultComponents(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
+        let referenceDate = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(0))
+        let thisCalendar = calendar.copy() as! NSCalendar
+        let UTC = NSTimeZone(forSecondsFromGMT: 0)
+        thisCalendar.timeZone  = UTC
+        let theseComponents = thisCalendar.components(componentFlags, fromDate: referenceDate)
+        theseComponents.calendar = calendar
+        theseComponents.timeZone = calendar.timeZone
+        return theseComponents
     }
 
-    public init(
-        year: Int? = nil,
-        month: Int? = nil,
-        day: Int? = nil,
-        yearForWeekOfYear: Int? = nil,
-        weekOfYear: Int? = nil,
-        weekday: Int? = nil,
+    convenience init?(
+        era: Int? = nil,
+        year: Int,
+        month: Int,
+        day: Int,
         hour: Int? = nil,
         minute: Int? = nil,
         second: Int? = nil,
         nanosecond: Int? = nil,
         timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
-        strictEvaluation: Bool = false) {
+        calendar: NSCalendar? = nil) {
 
-            self.components = NSDateComponents()
-            self.year = year
-            self.month = month
-            self.day = day
-            self.hour = hour
-            self.minute = minute
-            self.second = second
-            self.nanosecond = nanosecond
-            self.yearForWeekOfYear = yearForWeekOfYear
-            self.weekOfYear = weekOfYear
-            self.weekday = weekday
-            self.timeZone = timeZone
-            self.calendar = calendar
-            self.strictEvaluation = strictEvaluation
-    }
-    
-    
-    public convenience init(
-        timeSinceReferenceDate: NSTimeInterval,
-        timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
-        strictEvaluation: Bool = false) {
-            let date = NSDate(timeIntervalSinceReferenceDate: timeSinceReferenceDate)
-            self.init(date: date, calendar: calendar, timeZone: timeZone)
-    }
-
-    public convenience init(
-        components: NSDateComponents,
-        strictEvaluation: Bool = false) {
-            self.init()
-            for unit in componentFlagSet {
-                let value = components.valueForComponent(unit)
-                if value != NSDateComponentUndefined {
-                    self.components.setValue(value, forComponent: unit)
-                }
-            }
-            self.components.calendar = components.calendar
-            self.components.timeZone = components.timeZone
-    }
-
-    public convenience init(
-        date: NSDate,
-        timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
-        strictEvaluation: Bool = false) {
             let theCalendar = calendar ?? NSCalendar.currentCalendar()
-            theCalendar.timeZone = timeZone ?? NSTimeZone.defaultTimeZone()
-            let components = theCalendar.components(componentFlags, fromDate: date)
-            self.init(components: components, strictEvaluation: strictEvaluation)
+            if timeZone != nil {
+                theCalendar.timeZone = timeZone!
+            }
+            let defaultComponents = NSDate.defaultComponents(withCalendar: theCalendar)
+
+            let components = NSDateComponents()
+            components.era = era ?? defaultComponents.era
+            components.year = year
+            components.month = month
+            components.day = day
+            components.hour = hour ?? defaultComponents.hour
+            components.minute = minute ?? defaultComponents.minute
+            components.second = second ?? defaultComponents.second
+            components.nanosecond = nanosecond ?? defaultComponents.nanosecond
+            components.timeZone = theCalendar.timeZone
+            components.calendar = theCalendar
+
+            self.init(components: components)
     }
 
-    public convenience init(date: JHDate) {
-        self.init(components: date.components)
-        strictEvaluation = date.strictEvaluation
+    convenience init?(
+        era: Int? = nil,
+        yearForWeekOfYear: Int,
+        weekOfYear: Int,
+        weekday: Int,
+        hour: Int? = nil,
+        minute: Int? = nil,
+        second: Int? = nil,
+        nanosecond: Int? = nil,
+        timeZone: NSTimeZone? = nil,
+        calendar: NSCalendar? = nil) {
+
+            let theCalendar = calendar ?? NSCalendar.currentCalendar()
+            if timeZone != nil {
+                theCalendar.timeZone = timeZone!
+            }
+            let defaultComponents = NSDate.defaultComponents(withCalendar: theCalendar)
+
+            let components = NSDateComponents()
+            components.era = era ?? defaultComponents.era
+            components.yearForWeekOfYear = yearForWeekOfYear
+            components.weekOfYear = weekOfYear
+            components.weekday = weekday
+            components.hour = hour ?? defaultComponents.hour
+            components.minute = minute ?? defaultComponents.minute
+            components.second = second ?? defaultComponents.second
+            components.nanosecond = nanosecond ?? defaultComponents.nanosecond
+            components.timeZone = theCalendar.timeZone
+            components.calendar = theCalendar
+
+            self.init(components: components)
     }
 
-    public class func now(timeZone: NSTimeZone? = nil, calendar: NSCalendar? = nil) -> JHDate {
-        let now = NSDate()
-        let theCalendar = calendar ?? NSCalendar.currentCalendar()
-        let theTimeZone = timeZone ?? NSTimeZone.defaultTimeZone()
-        theCalendar.timeZone = theTimeZone
-        let components = theCalendar.components([.Year, .Month, .Day, .Hour, .Minute, .Second, .Calendar, .TimeZone], fromDate: now)
-        let date = JHDate(components: components)
-        return date
+
+    convenience init?(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) {
+
+        if components.calendar == nil {
+            components.calendar = calendar
+        }
+        if components.timeZone == nil {
+            components.timeZone = calendar.timeZone
+        }
+        if components.timeZone == nil {
+            components.timeZone = NSTimeZone.defaultTimeZone()
+            calendar.timeZone = components.timeZone!
+        }
+
+        let defaultComponents = NSDate.defaultComponents(withCalendar: calendar)
+        if components.year == NSDateComponentUndefined && components.yearForWeekOfYear == NSDateComponentUndefined { components.year = defaultComponents.year }
+
+        let thisDate = calendar.dateFromComponents(components)
+        self.init(timeIntervalSinceReferenceDate: (thisDate?.timeIntervalSinceReferenceDate)!)
     }
 
-    public class func today() -> JHDate {
-        let now = NSDate()
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Year, .Month, .Day, .Calendar, .TimeZone], fromDate: now)
-        let date = JHDate(components: components)
-        return date
+
+    class func today(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+        let components = calendar.components([.Era, .Year, .Month, .Day, .Calendar, .TimeZone], fromDate: NSDate())
+        return calendar.dateFromComponents(components)!
+    }
+
+    class func yesterday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+        return (today(withCalendar: calendar) - 1.days)!
+    }
+
+    class func tomorrow(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+        return (today(withCalendar: calendar) + 1.days)!
+    }
+
+    func components(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
+        return calendar.components(componentFlags, fromDate: self)
+    }
+
+    func valueForComponent(flag: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        let value = calendar.components(flag, fromDate: self).valueForComponent(flag)
+        return value == NSDateComponentUndefined ? nil : value
+    }
+
+    func withValue(value: Int, forUnit unit: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+        let valueUnits = [(value, unit)]
+        return withValues(valueUnits, withCalendar: calendar)
+    }
+
+    func withValues(valueUnits: [(Int, NSCalendarUnit)], withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+        let newComponents = components()
+        for valueUnit in valueUnits {
+            let value = valueUnit.0
+            let unit = valueUnit.1
+            newComponents.setValue(value, forComponent: unit)
+        }
+        return calendar.dateFromComponents(newComponents)!
+    }
+
+    func era(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Era, withCalendar: calendar)
+    }
+
+    func year(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Year, withCalendar: calendar)
+    }
+
+    func month(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Month, withCalendar: calendar)
+    }
+
+    func day(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Day, withCalendar: calendar)
+    }
+
+    func hour(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Hour, withCalendar: calendar)
+    }
+
+    func minute(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Minute, withCalendar: calendar)
+    }
+
+    func second(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Second, withCalendar: calendar)
+    }
+
+    func nanosecond(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Nanosecond, withCalendar: calendar)
+    }
+
+    func yearForWeekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.YearForWeekOfYear, withCalendar: calendar)
+    }
+
+    func weekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.WeekOfYear, withCalendar: calendar)
+    }
+
+    func weekday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Weekday, withCalendar: calendar)
+    }
+
+    func quarter(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.Quarter, withCalendar: calendar)
+    }
+
+    func weekOfMonth(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+        return valueForComponent(.WeekOfMonth, withCalendar: calendar)
+    }
+
+    func timeZone() -> NSTimeZone {
+        return calendar().timeZone
+    }
+
+    func calendar() -> NSCalendar {
+        return NSCalendar.currentCalendar()
+    }
+
+    func toString() -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "eee dd-MMM-yy GG HH:mm:ss.SSS zzz"
+        dateFormatter.calendar = calendar()
+        dateFormatter.timeZone = timeZone()
+        return dateFormatter.stringFromDate(self)
     }
 
 }
 
-public extension JHDate {
 
-    func filterUnits(units: NSCalendarUnit) -> JHDate {
-        let newDate = JHDate(date: self)
-        for unit in componentFlagSet {
-            let value = units.contains(unit) ? components.valueForComponent(unit) : NSDateComponentUndefined
-            newDate.components.setValue(value, forComponent: unit)
+public extension NSDate {
+
+    func smallerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
+        switch unit {
+        case NSCalendarUnit.Era: return .Year
+        case NSCalendarUnit.Year: return .Month
+        case NSCalendarUnit.Month: return .Day
+        case NSCalendarUnit.Day: return .Hour
+        case NSCalendarUnit.Hour: return .Minute
+        case NSCalendarUnit.Minute: return .Second
+        case NSCalendarUnit.Second: return .Nanosecond
+        case NSCalendarUnit.Nanosecond: return nil
+        case NSCalendarUnit.YearForWeekOfYear: return .WeekOfYear
+        case NSCalendarUnit.WeekOfYear: return .Weekday
+        case NSCalendarUnit.Weekday: return .Hour
+        default: return nil
         }
-        newDate.calendar = units.contains(.Calendar) ? components.calendar : nil
-        newDate.timeZone = units.contains(.TimeZone) ? components.timeZone : nil
+    }
+
+    func biggerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
+        switch unit {
+        case NSCalendarUnit.Era: return nil
+        case NSCalendarUnit.Year: return .Era
+        case NSCalendarUnit.Month: return .Year
+        case NSCalendarUnit.Day: return .Month
+        case NSCalendarUnit.Hour: return .Day
+        case NSCalendarUnit.Minute: return .Hour
+        case NSCalendarUnit.Second: return .Minute
+        case NSCalendarUnit.Nanosecond: return .Second
+        case NSCalendarUnit.YearForWeekOfYear: return .Era
+        case NSCalendarUnit.WeekOfYear: return .YearForWeekOfYear
+        case NSCalendarUnit.Weekday: return .WeekOfYear
+        default: return nil
+        }
+    }
+
+    func smallerUnits(unit: NSCalendarUnit) -> [NSCalendarUnit]? {
+        switch unit {
+        case NSCalendarUnit.Era: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month, .Year]
+        case NSCalendarUnit.Year: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month]
+        case NSCalendarUnit.Month: return [.Nanosecond, .Second, .Minute, .Hour, .Day]
+        case NSCalendarUnit.Day: return [.Nanosecond, .Second, .Minute, .Hour]
+        case NSCalendarUnit.Hour: return [.Nanosecond, .Second, .Minute]
+        case NSCalendarUnit.Minute: return [.Nanosecond, .Second]
+        case NSCalendarUnit.Second: return [.Nanosecond]
+        case NSCalendarUnit.Nanosecond: return []
+        case NSCalendarUnit.YearForWeekOfYear: return [.Nanosecond, .Second, .Minute, .Hour, .Weekday, .WeekOfYear]
+        case NSCalendarUnit.WeekOfYear: return [.Nanosecond, .Second, .Minute, .Hour, .Weekday]
+        case NSCalendarUnit.Weekday: return [.Nanosecond, .Second, .Minute, .Hour]
+        default:
+            return nil
+        }
+    }
+
+    public func startOf(unit: NSCalendarUnit) -> NSDate? {
+        let theseComponents = components()
+
+        let YMDUnits: NSCalendarUnit = [.Year, .Month, .Day]
+        let YWDUnits: NSCalendarUnit = [.YearForWeekOfYear, .WeekOfYear, .Weekday]
+
+        // Remove components that involve cause data that could upset dateFromComponents
+        if YMDUnits.contains(unit) {
+            theseComponents.yearForWeekOfYear = NSDateComponentUndefined
+            theseComponents.weekOfYear = NSDateComponentUndefined
+            theseComponents.weekOfMonth = NSDateComponentUndefined
+            theseComponents.weekday = NSDateComponentUndefined
+            theseComponents.weekdayOrdinal = NSDateComponentUndefined
+            theseComponents.quarter = NSDateComponentUndefined
+       }
+
+        if YWDUnits.contains(unit) {
+            theseComponents.year = NSDateComponentUndefined
+            theseComponents.month = NSDateComponentUndefined
+            theseComponents.day = NSDateComponentUndefined
+            theseComponents.quarter = NSDateComponentUndefined
+      }
+
+        for thisUnit in smallerUnits(unit)! {
+            let nextBiggerUnit = biggerUnit(thisUnit)!
+            let range = calendar().rangeOfUnit(thisUnit, inUnit: nextBiggerUnit, forDate: self)
+            let minimum = range.location
+            theseComponents.setValue(minimum, forComponent:thisUnit)
+        }
+
+        let newDate = calendar().dateFromComponents(theseComponents)
         return newDate
     }
 
-    func definedUnits() -> NSCalendarUnit {
-        var units = componentFlags
-        for unit in componentFlagSet {
-            if self.components.valueForComponent(unit) == NSDateComponentUndefined {
-                units.remove(unit)
-            }
-        }
-        if components.calendar == nil { units.remove(.Calendar) }
-        if components.timeZone == nil { units.remove(.TimeZone) }
-        return units
-    }
-
-    private func unitValue(unit: NSCalendarUnit) -> Int? {
-
-        // return the component value if it is defined
-        let value = components.valueForComponent(unit)
-        if value != NSDateComponentUndefined {
-            return value
-        }
-
-        // component is undefined, try to determine it from the date
-        guard !strictEvaluation else {
-            return nil
-        }
-
-        let theCalendar = calendar ?? NSCalendar.currentCalendar()
-        theCalendar.timeZone = timeZone ?? NSTimeZone.defaultTimeZone()
-        let dateComponents = theCalendar.components(unit, fromDate: date!)
-        return dateComponents.valueForComponent(unit)
-    }
-
-    var year: Int? {
-        get { return unitValue(.Year) }
-        set { components.year = newValue ?? NSDateComponentUndefined }
-    }
-
-    var month: Int? {
-        get { return unitValue(.Month) }
-        set { components.month = newValue ?? NSDateComponentUndefined }
-    }
-
-    var day: Int? {
-        get { return unitValue(.Day) }
-        set { components.day = newValue ?? NSDateComponentUndefined }
-    }
-
-    var hour: Int? {
-        get { return unitValue(.Hour) }
-        set { components.hour = newValue ?? NSDateComponentUndefined }
-    }
-
-    var minute: Int? {
-        get { return unitValue(.Minute) }
-        set { components.minute = newValue ?? NSDateComponentUndefined }
-    }
-
-    var second: Int? {
-        get { return unitValue(.Second) }
-        set { components.second = newValue ?? NSDateComponentUndefined }
-    }
-
-    var nanosecond: Int? {
-        get { return unitValue(.Nanosecond) }
-        set { components.nanosecond = newValue ?? NSDateComponentUndefined }
-    }
-
-    var yearForWeekOfYear: Int? {
-        get { return unitValue(.YearForWeekOfYear) }
-        set { components.yearForWeekOfYear = newValue ?? NSDateComponentUndefined }
-    }
-
-    var weekOfYear: Int? {
-        get { return unitValue(.WeekOfYear) }
-        set { components.weekOfYear = newValue ?? NSDateComponentUndefined }
-    }
-
-    var weekday: Int? {
-        get { return unitValue(.Weekday) }
-        set { components.weekday = newValue ?? NSDateComponentUndefined }
-    }
-    
-    var timeZone: NSTimeZone? {
-        get { return components.timeZone ?? (strictEvaluation ? nil : NSTimeZone.defaultTimeZone()) }
-        set { components.timeZone = newValue }
-    }
-
-    var calendar: NSCalendar? {
-        get { return components.calendar ?? (strictEvaluation ? nil : NSCalendar.currentCalendar()) }
-        set { components.calendar = newValue }
-    }
-    
-    var date: NSDate? {
-        get {
-            if strictEvaluation {
-                return components.date
-            }
-
-            // Not strict, so return reference date components if they are undefined
-            let result = NSDateComponents()
-            result.year = 2001
-            result.month = 1
-            result.day = 1
-            result.hour = 0
-            result.minute = 0
-            result.second = 0
-            result.nanosecond = 0
-            result.calendar = calendar
-            result.timeZone = timeZone
-
-            for unit in componentFlagSet {
-                let value = self.components.valueForComponent(unit)
-                if value != NSDateComponentUndefined {
-                    result.setValue(value, forComponent: unit)
-                }
-            }
-            return result.date
-        }
-    }
-
-    var validDate: Bool {
-        let theComponents = components
-        theComponents.calendar = calendar
-        theComponents.timeZone = timeZone
-        return theComponents.validDate
-    }
-
-    func isValidDateInCalendar(calendar: NSCalendar) -> Bool {
-        let theComponents = components
-        theComponents.calendar = calendar
-        theComponents.timeZone = timeZone
-        return theComponents.isValidDateInCalendar(calendar)
-    }
-
-}
-
-extension JHDate : CustomStringConvertible {
-
-    public var description: String {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "eee dd-MMM-yy GG HH:mm:ss.SSS zzz"
-        dateFormatter.calendar = calendar
-        dateFormatter.timeZone = timeZone
-        let dateString = date == nil ? "nil" : dateFormatter.stringFromDate(date!)
-        return "\(components.description)\nStrict evaluation: \(strictEvaluation)\nDate: \(dateString)"
-    }
-
-}
-
-
-public extension JHDate {
-    func startOf(unit: NSCalendarUnit) -> JHDate? {
-        guard calendar != nil else {
-            return nil
-        }
-
-        let nextSmallerUnit = --unit
-        guard nextSmallerUnit != nil else {
-            return self
-        }
-
-        let range = calendar!.rangeOfUnit(nextSmallerUnit!, inUnit: unit, forDate: self.date!)
-        components.setValue(range.location, forComponent: nextSmallerUnit!)
-
-        // debug code
-        //print(components)
-        //print(date)
-
-        return startOf(nextSmallerUnit!)
-    }
-
-    func endOf(unit: NSCalendarUnit) -> JHDate? {
-        guard calendar != nil else {
-            return nil
-        }
-
-        let nextSmallerUnit = --unit
-        guard nextSmallerUnit != nil else {
-            return self
-        }
-
-        let range = calendar!.rangeOfUnit(nextSmallerUnit!, inUnit: unit, forDate: self.date!)
-        components.setValue(range.location + range.length - 1, forComponent: nextSmallerUnit!)
-
-        // debug code 
-        //print(components)
-        //print(date)
-        
-        return endOf(nextSmallerUnit!)
+    public func endOf(unit: NSCalendarUnit) -> NSDate? {
+        let nextDate = calendar().dateByAddingUnit(unit, value: 1, toDate: self, options: NSCalendarOptions(rawValue: 0))!
+        let nextDateStart = nextDate.startOf(unit)!
+        let result = calendar().dateByAddingUnit(.Second, value: -1, toDate: nextDateStart, options: NSCalendarOptions(rawValue: 0))
+        return result
     }
 
 }
 
 // MARK: - Comparators
-public extension JHDate {
+extension NSDate : Comparable {
 
-    func hasTheSame(unitFlags: NSCalendarUnit, asDate: JHDate) -> Bool {
+    func hasTheSame(unitFlags: NSCalendarUnit, asDate date: NSDate, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
         for flag in componentFlagSet {
-            if self.components.valueForComponent(flag) != asDate.components.valueForComponent(flag) {
-                return false
+            if unitFlags.contains(flag) {
+                if self.valueForComponent(flag) != date.valueForComponent(flag) {
+                    return false
+                }
             }
         }
         return true
     }
 
-    public func isToday() -> Bool {
-        return self.hasTheSame(.Day, asDate: JHDate(date: NSDate()))
+    public func isInToday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDateInToday(self)
     }
 
+    public func isInYesterday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDateInYesterday(self)
+    }
+
+    public func isInTomorrow(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDateInTomorrow(self)
+    }
+
+    public func isInWeekend(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDateInWeekend(self)
+    }
+
+    public func isInWeekday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return !self.isInWeekend(withCalendar: calendar)
+    }
+
+    public func isEqualToDate(date: NSDate, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDate(self, inSameDayAsDate: date)
+    }
+
+    public func isEqualToDate(date: NSDate, toUnitGranularity unit: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+        return calendar.isDate(self, equalToDate: date, toUnitGranularity: unit)
+    }
 }
 
 
-public func ==(lhs: JHDate, rhs: JHDate) -> Bool {
-    for flag in componentFlagSet {
-        if lhs.components.valueForComponent(flag) != rhs.components.valueForComponent(flag) {
-            return false
-        }
-    }
-    if lhs.calendar != rhs.calendar { return false }
-    if lhs.timeZone != rhs.timeZone { return false }
-    if lhs.strictEvaluation != rhs.strictEvaluation { return false }
-    return true
+public func <(ldate: NSDate, rdate: NSDate) -> Bool {
+    return ldate.timeIntervalSinceReferenceDate < rdate.timeIntervalSinceReferenceDate
 }
-
-public func <(lhs: JHDate, rhs: JHDate) -> Bool {
-    guard lhs.validDate else {
-        return false
-    }
-    guard rhs.validDate else {
-        return false
-    }
-    let lDate = lhs.date!
-    let rDate = rhs.date!
-    return lDate.timeIntervalSinceReferenceDate < rDate.timeIntervalSinceReferenceDate
-}
-
 
 
 // MARK: - Operators
-extension JHDate {
-    func difference(toDate: JHDate, unitFlags: NSCalendarUnit) -> NSDateComponents? {
-        guard calendar != nil else {
-            return nil
-        }
-        guard validDate else {
-            return nil
-        }
-        guard toDate.validDate else {
-            return nil
-        }
-        return calendar!.components(unitFlags, fromDate: self.date!, toDate: toDate.date!, options: NSCalendarOptions(rawValue: 0))
+extension NSDate {
+    func difference(toDate: NSDate, unitFlags: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents? {
+        return calendar.components(unitFlags, fromDate: self, toDate: toDate, options: NSCalendarOptions(rawValue: 0))
+    }
+
+    func addComponents(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+        return calendar.dateByAddingComponents(components, toDate: self, options: NSCalendarOptions.MatchStrictly)
     }
 }
 
-public prefix func --(unit: NSCalendarUnit) -> NSCalendarUnit? {
-    switch unit {
-    case NSCalendarUnit.Era: return .Year
-    case NSCalendarUnit.Year: return .Month
-    case NSCalendarUnit.Month: return .Day
-    case NSCalendarUnit.Day: return .Hour
-    case NSCalendarUnit.Hour: return .Minute
-    case NSCalendarUnit.Minute: return .Second
-    case NSCalendarUnit.Second: return .Nanosecond
-    case NSCalendarUnit.Nanosecond: return nil
-    case NSCalendarUnit.YearForWeekOfYear: return .WeekOfYear
-    case NSCalendarUnit.WeekOfYear: return .Weekday
-    case NSCalendarUnit.Weekday: return .Hour
-    default: return nil
-    }
-}
-
-
-public func - (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
+public func - (lhs: NSDate, rhs: NSDateComponents) -> NSDate? {
     return lhs + (-rhs)
 }
 
-public func + (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
-    guard lhs.validDate else {
-        return nil
-    }
-    let calendar = lhs.calendar!
-    let resultDate = calendar.dateByAddingComponents(rhs, toDate: lhs.date!, options: NSCalendarOptions(rawValue: 0))
-    guard resultDate != nil else {
-        return nil
-    }
-    return JHDate(date: resultDate!).filterUnits(lhs.definedUnits())
+public func + (lhs: NSDate, rhs: NSDateComponents) -> NSDate? {
+    return lhs.addComponents(rhs)
 }
 
 
@@ -481,7 +449,7 @@ public extension Int {
         dateComponents.month = self
         return dateComponents
     }
-
+    
     var years: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.year = self
