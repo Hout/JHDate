@@ -21,7 +21,10 @@ private let componentFlagSet: [NSCalendarUnit] = [.Day, .Month, .Year, .Hour, .M
 // For selecting all components from a date
 private let componentFlags: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar, .YearForWeekOfYear, .WeekOfYear, .Weekday, .Quarter, .WeekOfMonth]
 
-public extension NSDate {
+
+// MARK: - Initialisations
+
+extension NSDate {
 
     internal class func defaultComponents(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
         let referenceDate = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(0))
@@ -34,7 +37,7 @@ public extension NSDate {
         return theseComponents
     }
 
-    convenience init?(
+    public convenience init?(
         era: Int? = nil,
         year: Int,
         month: Int,
@@ -67,7 +70,7 @@ public extension NSDate {
             self.init(components: components)
     }
 
-    convenience init?(
+    public convenience init?(
         era: Int? = nil,
         yearForWeekOfYear: Int,
         weekOfYear: Int,
@@ -101,7 +104,7 @@ public extension NSDate {
     }
 
 
-    convenience init?(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) {
+    public convenience init?(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) {
 
         if components.calendar == nil {
             components.calendar = calendar
@@ -120,36 +123,41 @@ public extension NSDate {
         let thisDate = calendar.dateFromComponents(components)
         self.init(timeIntervalSinceReferenceDate: (thisDate?.timeIntervalSinceReferenceDate)!)
     }
+}
+
+// MARK: - NSCalendar & NSDateComponent ports
 
 
-    class func today(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+extension NSDate {
+
+    public class func today(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
         let components = calendar.components([.Era, .Year, .Month, .Day, .Calendar, .TimeZone], fromDate: NSDate())
         return calendar.dateFromComponents(components)!
     }
 
-    class func yesterday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+    public class func yesterday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
         return (today(withCalendar: calendar) - 1.days)!
     }
 
-    class func tomorrow(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
+    public class func tomorrow(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
         return (today(withCalendar: calendar) + 1.days)!
     }
 
-    func components(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
+    public func components(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
         return calendar.components(componentFlags, fromDate: self)
     }
 
-    func valueForComponent(flag: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func valueForComponent(flag: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         let value = calendar.components(flag, fromDate: self).valueForComponent(flag)
         return value == NSDateComponentUndefined ? nil : value
     }
 
-    func withValue(value: Int, forUnit unit: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+    public func withValue(value: Int, forUnit unit: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
         let valueUnits = [(value, unit)]
         return withValues(valueUnits, withCalendar: calendar)
     }
 
-    func withValues(valueUnits: [(Int, NSCalendarUnit)], withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+    public func withValues(valueUnits: [(Int, NSCalendarUnit)], withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
         let newComponents = components()
         for valueUnit in valueUnits {
             let value = valueUnit.0
@@ -159,67 +167,67 @@ public extension NSDate {
         return calendar.dateFromComponents(newComponents)!
     }
 
-    func era(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func era(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Era, withCalendar: calendar)
     }
 
-    func year(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func year(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Year, withCalendar: calendar)
     }
 
-    func month(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func month(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Month, withCalendar: calendar)
     }
 
-    func day(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func day(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Day, withCalendar: calendar)
     }
 
-    func hour(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func hour(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Hour, withCalendar: calendar)
     }
 
-    func minute(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func minute(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Minute, withCalendar: calendar)
     }
 
-    func second(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func second(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Second, withCalendar: calendar)
     }
 
-    func nanosecond(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func nanosecond(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Nanosecond, withCalendar: calendar)
     }
 
-    func yearForWeekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func yearForWeekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.YearForWeekOfYear, withCalendar: calendar)
     }
 
-    func weekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func weekOfYear(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.WeekOfYear, withCalendar: calendar)
     }
 
-    func weekday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func weekday(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Weekday, withCalendar: calendar)
     }
 
-    func quarter(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func quarter(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.Quarter, withCalendar: calendar)
     }
 
-    func weekOfMonth(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
+    public func weekOfMonth(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Int? {
         return valueForComponent(.WeekOfMonth, withCalendar: calendar)
     }
 
-    func timeZone() -> NSTimeZone {
+    public func timeZone() -> NSTimeZone {
         return calendar().timeZone
     }
 
-    func calendar() -> NSCalendar {
+    public func calendar() -> NSCalendar {
         return NSCalendar.currentCalendar()
     }
 
-    func toString() -> String {
+    public func toString() -> String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "eee dd-MMM-yy GG HH:mm:ss.SSS zzz"
         dateFormatter.calendar = calendar()
@@ -230,26 +238,11 @@ public extension NSDate {
 }
 
 
-public extension NSDate {
+// MARK: - start of and end of operations
 
-    func smallerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
-        switch unit {
-        case NSCalendarUnit.Era: return .Year
-        case NSCalendarUnit.Year: return .Month
-        case NSCalendarUnit.Month: return .Day
-        case NSCalendarUnit.Day: return .Hour
-        case NSCalendarUnit.Hour: return .Minute
-        case NSCalendarUnit.Minute: return .Second
-        case NSCalendarUnit.Second: return .Nanosecond
-        case NSCalendarUnit.Nanosecond: return nil
-        case NSCalendarUnit.YearForWeekOfYear: return .WeekOfYear
-        case NSCalendarUnit.WeekOfYear: return .Weekday
-        case NSCalendarUnit.Weekday: return .Hour
-        default: return nil
-        }
-    }
+extension NSDate {
 
-    func biggerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
+    internal func biggerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
         switch unit {
         case NSCalendarUnit.Era: return nil
         case NSCalendarUnit.Year: return .Era
@@ -266,7 +259,7 @@ public extension NSDate {
         }
     }
 
-    func smallerUnits(unit: NSCalendarUnit) -> [NSCalendarUnit]? {
+    internal func smallerUnits(unit: NSCalendarUnit) -> [NSCalendarUnit]? {
         switch unit {
         case NSCalendarUnit.Era: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month, .Year]
         case NSCalendarUnit.Year: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month]
@@ -328,9 +321,10 @@ public extension NSDate {
 }
 
 // MARK: - Comparators
+
 extension NSDate : Comparable {
 
-    func hasTheSame(unitFlags: NSCalendarUnit, asDate date: NSDate, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
+    public func hasTheSame(unitFlags: NSCalendarUnit, asDate date: NSDate, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
         for flag in componentFlagSet {
             if unitFlags.contains(flag) {
                 if self.valueForComponent(flag) != date.valueForComponent(flag) {
@@ -377,12 +371,14 @@ public func <(ldate: NSDate, rdate: NSDate) -> Bool {
 
 
 // MARK: - Operators
+
 extension NSDate {
-    func difference(toDate: NSDate, unitFlags: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents? {
+
+    internal func difference(toDate: NSDate, unitFlags: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents? {
         return calendar.components(unitFlags, fromDate: self, toDate: toDate, options: NSCalendarOptions(rawValue: 0))
     }
 
-    func addComponents(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
+    internal func addComponents(components: NSDateComponents, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate? {
         return calendar.dateByAddingComponents(components, toDate: self, options: NSCalendarOptions.MatchStrictly)
     }
 }
@@ -407,8 +403,9 @@ public prefix func - (dateComponents: NSDateComponents) -> NSDateComponents {
     return result
 }
 
+// MARK: - Helpers to enable expressions e.g. date + 1.days - 20.seconds
 
-public extension Int {
+extension Int {
     var nanoseconds: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.nanosecond = self
