@@ -171,35 +171,6 @@ class JHDateSpec: QuickSpec {
 
             }
 
-            context("unit operations") {
-
-                var date: NSDate!
-                var dateCopy: NSDate!
-                beforeEach {
-                    date = NSDate()
-                    dateCopy = date.copy() as! NSDate
-                }
-
-                it("should return full units when filter is open") {
-                    let filteredDate = date.filterUnits(NSCalendarUnit(rawValue: UInt.max))
-                    expect(filteredDate) == dateCopy
-                }
-
-                it("should return reference date when filter is closed") {
-                    let filteredDate = date.filterUnits(NSCalendarUnit(rawValue: 0))!
-
-                    expect(filteredDate.components()) == NSDate.defaultComponents()
-                }
-
-                it("should return filtered units when filtered") {
-                    let filteredDate = date.filterUnits(NSCalendarUnit.Second)!
-                    expect(filteredDate) != dateCopy
-                    expect(filteredDate.second()) == dateCopy.second()
-                }
-
-                // TODO: definedUnits
-            }
-
             context("class func") {
 
                 it("should return a proper current date for today") {
