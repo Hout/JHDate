@@ -24,7 +24,7 @@ private let componentFlags: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minut
 
 // MARK: - Initialisations
 
-extension NSDate {
+public extension NSDate {
 
     internal class func defaultComponents(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents {
         let referenceDate = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(0))
@@ -128,7 +128,7 @@ extension NSDate {
 // MARK: - NSCalendar & NSDateComponent ports
 
 
-extension NSDate {
+public extension NSDate {
 
     public class func today(withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDate {
         let components = calendar.components([.Era, .Year, .Month, .Day, .Calendar, .TimeZone], fromDate: NSDate())
@@ -240,7 +240,7 @@ extension NSDate {
 
 // MARK: - start of and end of operations
 
-extension NSDate {
+public extension NSDate {
 
     internal func biggerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
         switch unit {
@@ -291,14 +291,14 @@ extension NSDate {
             theseComponents.weekday = NSDateComponentUndefined
             theseComponents.weekdayOrdinal = NSDateComponentUndefined
             theseComponents.quarter = NSDateComponentUndefined
-       }
+        }
 
         if YWDUnits.contains(unit) {
             theseComponents.year = NSDateComponentUndefined
             theseComponents.month = NSDateComponentUndefined
             theseComponents.day = NSDateComponentUndefined
             theseComponents.quarter = NSDateComponentUndefined
-      }
+        }
 
         for thisUnit in smallerUnits(unit)! {
             let nextBiggerUnit = biggerUnit(thisUnit)!
@@ -322,7 +322,7 @@ extension NSDate {
 
 // MARK: - Comparators
 
-extension NSDate : Comparable {
+public extension NSDate {
 
     public func hasTheSame(unitFlags: NSCalendarUnit, asDate date: NSDate, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> Bool {
         for flag in componentFlagSet {
@@ -364,17 +364,27 @@ extension NSDate : Comparable {
     }
 }
 
+extension NSDate : Comparable {}
+
+public func ==(ldate: NSDate, rdate: NSDate) -> Bool {
+    return ldate.timeIntervalSinceReferenceDate == rdate.timeIntervalSinceReferenceDate
+}
+
 
 public func <(ldate: NSDate, rdate: NSDate) -> Bool {
     return ldate.timeIntervalSinceReferenceDate < rdate.timeIntervalSinceReferenceDate
 }
 
+public func >(ldate: NSDate, rdate: NSDate) -> Bool {
+    return ldate.timeIntervalSinceReferenceDate > rdate.timeIntervalSinceReferenceDate
+}
+
 
 // MARK: - Operators
 
-extension NSDate {
+public extension NSDate {
 
-    internal func difference(toDate: NSDate, unitFlags: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents? {
+    public func difference(toDate: NSDate, unitFlags: NSCalendarUnit, withCalendar calendar: NSCalendar = NSCalendar.currentCalendar()) -> NSDateComponents? {
         return calendar.components(unitFlags, fromDate: self, toDate: toDate, options: NSCalendarOptions(rawValue: 0))
     }
 
@@ -405,49 +415,49 @@ public prefix func - (dateComponents: NSDateComponents) -> NSDateComponents {
 
 // MARK: - Helpers to enable expressions e.g. date + 1.days - 20.seconds
 
-extension Int {
-    var nanoseconds: NSDateComponents {
+public extension Int {
+    public var nanoseconds: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.nanosecond = self
         return dateComponents
     }
-    var seconds: NSDateComponents {
+    public var seconds: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.second = self
         return dateComponents
     }
 
-    var minutes: NSDateComponents {
+    public var minutes: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.minute = self
         return dateComponents
     }
 
-    var hours: NSDateComponents {
+    public var hours: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.hour = self
         return dateComponents
     }
 
-    var days: NSDateComponents {
+    public var days: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.day = self
         return dateComponents
     }
 
-    var weeks: NSDateComponents {
+    public var weeks: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.weekOfYear = self
         return dateComponents
     }
 
-    var months: NSDateComponents {
+    public var months: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.month = self
         return dateComponents
     }
     
-    var years: NSDateComponents {
+    public var years: NSDateComponents {
         let dateComponents = NSDateComponents()
         dateComponents.year = self
         return dateComponents
