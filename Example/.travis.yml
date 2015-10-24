@@ -1,5 +1,6 @@
 # travis.yml
 
+osx_image: xcode7.1
 language: objective-c
 xcode_workspace: Examples/JHDate.xcworkspace
 xcode_scheme: JHDate_Tests
