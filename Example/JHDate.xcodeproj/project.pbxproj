@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1F2FF34C1BD2E79000BCE487 /* JHDateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F2FF34B1BD2E79000BCE487 /* JHDateTests.swift */; };
+		4FE4F437EE4688332D96037F /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA378D4D3F77D46428F579B /* Pods.framework */; };
 		7C6E8AF6E02B1CE38217035C /* Pods_JHDate_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24E67AF4A54246E198480F82 /* Pods_JHDate_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -20,6 +21,7 @@
 		607FACE51AFB9204008FA782 /* JHDate_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JHDate_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		720E209C55796151D2E23860 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		ABA378D4D3F77D46428F579B /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B72469BC2EDD577EE90DDD51 /* Pods-JHDate_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JHDate_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-JHDate_Tests/Pods-JHDate_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -29,6 +31,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7C6E8AF6E02B1CE38217035C /* Pods_JHDate_Tests.framework in Frameworks */,
+				4FE4F437EE4688332D96037F /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				24E67AF4A54246E198480F82 /* Pods_JHDate_Tests.framework */,
+				ABA378D4D3F77D46428F579B /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -178,7 +182,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-JHDate_Tests/Pods-JHDate_Tests-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A4E7D3C9546CDC3F60B76CDF /* Copy Pods Resources */ = {
