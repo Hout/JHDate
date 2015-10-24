@@ -1,9 +1,6 @@
 # travis.yml
 
 language: objective-c
-osx_image: xcode7.1
-
-language: objective-c
 xcode_workspace: Examples/JHDate.xcworkspace
-xcode_scheme: Examples/JHDate_Tests
+xcode_scheme: JHDate_Tests
 podfile: Examples/Podfile
