@@ -1,6 +1,9 @@
 # travis.yml
 
 language: objective-c
+osx_image: xcode7.1
 
-script:
-- xctool test -workspace JHDate.xcworkspace -scheme JHDate_Tests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+language: objective-c
+xcode_workspace: Examples/JHDate.xcworkspace
+xcode_scheme: Examples/JHDate_Tests
+podfile: Examples/Podfile
