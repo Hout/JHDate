@@ -15,8 +15,6 @@
 /* Begin PBXFileReference section */
 		0AB7635FCE6B429E384B232A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		1F2FF34B1BD2E79000BCE487 /* JHDateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JHDateTests.swift; sourceTree = "<group>"; };
-		1F2FF3541BD3B0FC00BCE487 /* JHDateExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JHDateExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F2FF3681BD3B46D00BCE487 /* JHDatePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JHDatePlayground.playground; sourceTree = "<group>"; };
 		1FDF58221BDBB77200F4C41D /* .travis.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
 		24E67AF4A54246E198480F82 /* Pods_JHDate_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JHDate_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36A5D2CEAEB83735D9F6643A /* JHDate.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = JHDate.podspec; path = ../JHDate.podspec; sourceTree = "<group>"; };
@@ -28,13 +26,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		1F2FF3511BD3B0FC00BCE487 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACE21AFB9204008FA782 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -46,14 +37,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1F2FF3671BD3B44B00BCE487 /* Example */ = {
-			isa = PBXGroup;
-			children = (
-				1F2FF3681BD3B46D00BCE487 /* JHDatePlayground.playground */,
-			);
-			name = Example;
-			sourceTree = "<group>";
-		};
 		1FDF58211BDBB75600F4C41D /* Travis */ = {
 			isa = PBXGroup;
 			children = (
@@ -66,7 +49,6 @@
 			isa = PBXGroup;
 			children = (
 				1FDF58211BDBB75600F4C41D /* Travis */,
-				1F2FF3671BD3B44B00BCE487 /* Example */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -79,7 +61,6 @@
 			isa = PBXGroup;
 			children = (
 				607FACE51AFB9204008FA782 /* JHDate_Tests.xctest */,
-				1F2FF3541BD3B0FC00BCE487 /* JHDateExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,23 +112,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1F2FF3531BD3B0FC00BCE487 /* JHDateExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1F2FF3631BD3B0FC00BCE487 /* Build configuration list for PBXNativeTarget "JHDateExample" */;
-			buildPhases = (
-				1F2FF3501BD3B0FC00BCE487 /* Sources */,
-				1F2FF3511BD3B0FC00BCE487 /* Frameworks */,
-				1F2FF3521BD3B0FC00BCE487 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = JHDateExample;
-			productName = JHDateExample;
-			productReference = 1F2FF3541BD3B0FC00BCE487 /* JHDateExample.app */;
-			productType = "com.apple.product-type.application";
-		};
 		607FACE41AFB9204008FA782 /* JHDate_Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "JHDate_Tests" */;
@@ -178,9 +142,6 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
-					1F2FF3531BD3B0FC00BCE487 = {
-						CreatedOnToolsVersion = 7.0.1;
-					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						TestTargetID = 607FACCF1AFB9204008FA782;
@@ -201,19 +162,11 @@
 			projectRoot = "";
 			targets = (
 				607FACE41AFB9204008FA782 /* JHDate_Tests */,
-				1F2FF3531BD3B0FC00BCE487 /* JHDateExample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1F2FF3521BD3B0FC00BCE487 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACE31AFB9204008FA782 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -273,13 +226,6 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		1F2FF3501BD3B0FC00BCE487 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		607FACE11AFB9204008FA782 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -291,33 +237,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1F2FF3641BD3B0FC00BCE487 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				INFOPLIST_FILE = JHDateExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.houtzager.JHDateExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		1F2FF3651BD3B0FC00BCE487 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = JHDateExample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.houtzager.JHDateExample;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 		607FACED1AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -355,7 +274,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -393,7 +312,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -431,14 +350,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1F2FF3631BD3B0FC00BCE487 /* Build configuration list for PBXNativeTarget "JHDateExample" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1F2FF3641BD3B0FC00BCE487 /* Debug */,
-				1F2FF3651BD3B0FC00BCE487 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-		};
 		607FACCB1AFB9204008FA782 /* Build configuration list for PBXProject "JHDate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

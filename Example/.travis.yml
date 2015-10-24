@@ -4,3 +4,4 @@ osx_image: xcode7.1
 language: objective-c
 xcode_workspace: Examples/JHDate.xcworkspace
 podfile: Examples/Podfile
+
