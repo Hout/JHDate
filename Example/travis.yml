@@ -1,0 +1,6 @@
+# travis.yml
+
+language: objective-c
+
+script:
+- xctool test -workspace JHDate.xcworkspace -scheme JHDate_Tests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
