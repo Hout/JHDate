@@ -83,6 +83,8 @@ class JHDateSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
+                    expect(date.calendar) == calendar
+                    expect(date.timeZone) == UTCTimeZone
                 }
 
 
@@ -96,6 +98,8 @@ class JHDateSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
+                    expect(date.calendar) == NSCalendar.currentCalendar()
+                    expect(date.timeZone) == NSTimeZone.defaultTimeZone()
                 }
 
 
@@ -109,6 +113,8 @@ class JHDateSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
+                    expect(date.calendar) == NSCalendar.currentCalendar()
+                    expect(date.timeZone) == NSTimeZone.defaultTimeZone()
                 }
 
 
@@ -118,6 +124,8 @@ class JHDateSpec: QuickSpec {
                     expect(date.year) == 1999
                     expect(date.month) == 12
                     expect(date.day) == 31
+                    expect(date.calendar) == NSCalendar.currentCalendar()
+                    expect(date.timeZone) == NSTimeZone.defaultTimeZone()
                 }
 
                 it("should return a 123 date for YWD initialisation") {

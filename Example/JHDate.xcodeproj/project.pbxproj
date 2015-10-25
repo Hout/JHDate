@@ -16,6 +16,7 @@
 		140DD966FEA2C80F95EC50F5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		1B62BBCA24402F8BDE2234D6 /* Pods_JHDate_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JHDate_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E90DEC49A0DBEA9FBD6E266 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1F6D38511BDD7F010022C072 /* JHDatePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JHDatePlayground.playground; sourceTree = "<group>"; };
 		2493412A56A8D623771CD441 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		5F66D3CAD45BF976E5A2779D /* Pods-JHDate_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JHDate_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-JHDate_Tests/Pods-JHDate_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* JHDate_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JHDate_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,9 +39,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F6D38521BDD85550022C072 /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				1F6D38511BDD7F010022C072 /* JHDatePlayground.playground */,
+			);
+			name = Playground;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				1F6D38521BDD85550022C072 /* Playground */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,

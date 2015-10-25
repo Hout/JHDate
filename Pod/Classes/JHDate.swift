@@ -52,7 +52,7 @@ public class JHDate : Comparable, CustomStringConvertible {
         thisCalendar.timeZone  = UTC
         let theseComponents = thisCalendar.components(JHDate.componentFlags, fromDate: referenceDate)
         theseComponents.calendar = thisCalendar
-        theseComponents.timeZone = thisCalendar.timeZone
+        theseComponents.timeZone = NSTimeZone.defaultTimeZone()
         return theseComponents
     }
 
@@ -254,7 +254,7 @@ public extension JHDate {
 
     public var description: String {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "eee dd-MMM-yy GG HH:mm:ss.SSS zzz"
+        dateFormatter.dateFormat = "eee dd-MMM-yyyy GG HH:mm:ss.SSS zzz"
         dateFormatter.calendar = calendar
         dateFormatter.timeZone = timeZone
         return dateFormatter.stringFromDate(self.date)
