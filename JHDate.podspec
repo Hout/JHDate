@@ -41,7 +41,7 @@ DESC
   s.homepage         = "https://github.com/Hout/JHDate"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
-  s.author           = { "Hout" => "houtzager@gmail.com" }
+  s.author           = { "Hout" => "through Github" }
   s.source           = { :git => "https://github.com/Hout/JHDate.git", :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/JerHout'
 
