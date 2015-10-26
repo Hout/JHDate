@@ -398,7 +398,16 @@ public extension JHDate {
         return valueForComponent(.Weekday)
     }
 
+    /// The ordinal number of weekday units for the receiver.
+    /// Weekday ordinal units represent the position of the weekday within the next larger calendar unit,
+    ///     such as the month. For example, 2 is the weekday ordinal unit for the second Friday of the month.
     ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var weekdayOrdinal: Int? {
+        return valueForComponent(.WeekdayOrdinal)
+    }
+
     /// The number of quarter units for the receiver.
     /// Weekday ordinal units represent the position of the weekday within the next larger calendar unit,
     ///     such as the month. For example, 2 is the weekday ordinal unit for the second Friday of the month.
@@ -417,6 +426,15 @@ public extension JHDate {
         return valueForComponent(.WeekOfMonth)
     }
 
+    /// Boolean value that indicates whether the month is a leap month.
+    /// ``YES`` if the month is a leap month, ``NO`` otherwise
+    ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var leapMonth: Bool {
+        return components.leapMonth
+    }
+
 }
 
 // MARK: - CustomStringConvertable delegate
@@ -426,11 +444,18 @@ extension JHDate : CustomStringConvertible {
     /// Returns a full description of the class
     ///
     public var description: String {
+        var descriptor: [String] = []
+
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "eee dd-MMM-yyyy GG HH:mm:ss.SSS zzz"
         dateFormatter.calendar = calendar
         dateFormatter.timeZone = timeZone
-        return dateFormatter.stringFromDate(self.date)
+        descriptor.append("Date \(dateFormatter.stringFromDate(self.date))")
+
+        descriptor.append("Calendar: \(calendar.description)")
+        descriptor.append("Time zone: \(timeZone.description)")
+
+        return descriptor.joinWithSeparator("\n")
     }
 
 }
