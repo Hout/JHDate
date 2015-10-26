@@ -365,7 +365,7 @@ class JHDateSpec: QuickSpec {
                 it("should differ properly") {
                     let date1 = JHDate(year: 2001, month: 2, day: 1)!
                     let date2 = JHDate(year: 2003, month: 1, day: 10)!
-                    let components = date1.difference(date2.date, unitFlags: [.Month, .Year])
+                    let components = date1.difference(date2, unitFlags: [.Month, .Year])
 
                     let expectedComponents = NSDateComponents()
                     expectedComponents.month = 11
