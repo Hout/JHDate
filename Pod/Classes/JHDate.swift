@@ -26,7 +26,7 @@ public class JHDate : Comparable, CustomStringConvertible {
     private static let componentFlags: NSCalendarUnit = [.Day, .Month, .Year, .Hour, .Minute, .Second, .Nanosecond, .TimeZone, .Calendar, .YearForWeekOfYear, .WeekOfYear, .Weekday, .Quarter, .WeekOfMonth]
     
 
-    public var date: NSDate
+    public let date: NSDate
 
     public var calendar: NSCalendar
 
