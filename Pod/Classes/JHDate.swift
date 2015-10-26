@@ -595,17 +595,20 @@ public extension JHDate {
 
 public extension JHDate {
 
-    public func hasTheSame(unitFlags: NSCalendarUnit, asDate date: JHDate) -> Bool {
-        for flag in JHDate.componentFlagSet {
-            if unitFlags.contains(flag) {
-                if self.valueForComponent(flag) != date.valueForComponent(flag) {
-                    return false
-                }
-            }
-        }
-        return true
+    /// Returns an NSComparisonResult value that indicates the ordering of two given dates based on their components down to a given unit granularity.
+    ///
+    /// - Parameters:
+    ///     - date: date to compare.
+    ///     - toUnitGranularity: The smallest unit that must, along with all larger units, be equal for the given dates to be considered the same. 
+    ///         For possible values, see “[Calendar Units](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/c/tdef/NSCalendarUnit)”
+    ///
+    /// - Returns: NSOrderedSame if the dates are the same down to the given granularity, otherwise NSOrderedAscending or NSOrderedDescending.
+    ///
+    /// - seealso: [compareDate:toDate:toUnitGranularity:](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/occ/instm/NSCalendar/compareDate:toDate:toUnitGranularity:)
+    ///
+    public func compareDate(date: JHDate, toUnitGranularity unit: NSCalendarUnit) -> NSComparisonResult {
+        return calendar.compareDate(self.date, toDate: date.date, toUnitGranularity: unit)
     }
-
 
     /// Returns whether the given date is in today.
     ///
@@ -680,10 +683,6 @@ public extension JHDate {
     ///
     public func isEqualToDate(date: NSDate) -> Bool {
         return calendar.isDate(self.date, inSameDayAsDate: date)
-    }
-
-    public func isEqualToDate(date: NSDate, toUnitGranularity unit: NSCalendarUnit) -> Bool {
-        return calendar.isDate(self.date, equalToDate: date, toUnitGranularity: unit)
     }
 }
 
