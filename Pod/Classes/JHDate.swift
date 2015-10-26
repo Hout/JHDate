@@ -245,7 +245,6 @@ public extension JHDate {
         return (today() + 1.days)!
     }
 
-    public func components() -> NSDateComponents {
     /// Returns a NSDateComponents object containing a given date decomposed into components:
     ///     day, month, year, hour, minute, second, nanosecond, timeZone, calendar,
     ///     yearForWeekOfYear, weekOfYear, weekday, quarter and weekOfMonth.
@@ -253,6 +252,7 @@ public extension JHDate {
     ///
     /// - Returns: An NSDateComponents object containing date decomposed into the components as specified.
     ///
+    public var components : NSDateComponents {
         return calendar.components(JHDate.componentFlags, fromDate: date)
     }
 
@@ -295,7 +295,7 @@ public extension JHDate {
     /// - seealso: public func withValues(valueUnits: [(Int, NSCalendarUnit)]) -> JHDate?
     ///
     public func withValues(valueUnits: [(Int, NSCalendarUnit)]) -> JHDate? {
-        let newComponents = components()
+        let newComponents = components
         for valueUnit in valueUnits {
             let value = valueUnit.0
             let unit = valueUnit.1
@@ -505,7 +505,7 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public func startOf(unit: NSCalendarUnit) -> JHDate? {
-        let theseComponents = components()
+        let theseComponents = components
 
         let YMDUnits: NSCalendarUnit = [.Year, .Month, .Day]
         let YWDUnits: NSCalendarUnit = [.YearForWeekOfYear, .WeekOfYear, .Weekday]
