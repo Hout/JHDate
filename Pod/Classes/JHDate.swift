@@ -432,7 +432,11 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public var leapMonth: Bool {
-        return components.leapMonth
+        let range = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
+        return range.length == 29
+
+        // Wanted to use the library function below, but that does not work properly...
+        // return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
 
 }

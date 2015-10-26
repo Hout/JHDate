@@ -186,6 +186,41 @@ class JHDateSpec: QuickSpec {
 
             }
 
+            context("properties") {
+                it("should return proper normal YMD properties") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    expect(date.year) == 1999
+                    expect(date.month) == 12
+                    expect(date.day) == 31
+                }
+                it("should return proper normal HMSN properties") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000)!
+                    expect(date.year) == 1999
+                    expect(date.month) == 12
+                    expect(date.day) == 31
+                    expect(date.hour) == 23
+                    expect(date.minute) == 59
+                    expect(date.second) == 59
+                    expect(date.nanosecond) > 400000000
+                    expect(date.nanosecond) < 600000000
+                }
+                it("should return proper leap month") {
+                    for year in 1500...2500 {
+                        let date = JHDate(year: year, month: 2, day: 1)!
+
+                        if year % 400 == 0 {
+                            expect(date.leapMonth).to(beTrue(), description: "year \(year) is divisable by 400 and is leap")
+                        } else if year % 100 == 0 {
+                            expect(date.leapMonth).to(beFalse(), description: "year \(year) is divisable by 100 and is NOT leap")
+                        } else if year % 4 == 0 {
+                            expect(date.leapMonth).to(beTrue(), description: "year \(year) is divisable by 4 and is leap")
+                        } else {
+                            expect(date.leapMonth).to(beFalse(), description: "year \(year) is NOT divisable by 4 and is NOT leap")
+                        }
+                    }
+                }
+            }
+
             context("comparisons") {
 
                 it("should return true for greater than comparing") {
