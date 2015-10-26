@@ -704,7 +704,7 @@ extension JHDate : Comparable {}
 /// - Returns: a boolean indicating whether the receiver is equal to the given date
 ///
 public func ==(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate == rdate.timeIntervalSinceReferenceDate
+    return ldate.date.isEqualToDate(rdate.date)
 }
 
 /// Returns whether the given date is later than the receiver.
@@ -716,7 +716,7 @@ public func ==(ldate: JHDate, rdate: JHDate) -> Bool {
 /// - Returns: a boolean indicating whether the receiver is earlier than the given date
 ///
 public func <(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate < rdate.timeIntervalSinceReferenceDate
+    return ldate.date.compare(rdate.date) == .OrderedAscending
 }
 
 /// Returns whether the given date is earlier than the receiver.
@@ -728,7 +728,7 @@ public func <(ldate: JHDate, rdate: JHDate) -> Bool {
 /// - Returns: a boolean indicating whether the receiver is later than the given date
 ///
 public func >(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate > rdate.timeIntervalSinceReferenceDate
+    return ldate.date.compare(rdate.date) == .OrderedDescending
 }
 
 
