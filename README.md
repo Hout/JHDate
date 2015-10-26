@@ -1,6 +1,7 @@
 # JHDate
 
-[![CI Status](http://img.shields.io/travis/Hout/JHDate.svg?style=flat)](https://travis-ci.org/Hout/JHDate)
+[![Build Status](https://travis-ci.org/Hout/JHDate.svg?branch=master)](https://travis-ci.org/Hout/JHDate)
+[![Inline docs](http://inch-ci.org/github/Hout/JHDate.svg)](http://inch-ci.org/github/Hout/JHDate)
 [![Version](https://img.shields.io/cocoapods/v/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
@@ -77,12 +78,20 @@ The test code requires Quick and Nimble to be implemented. You can do so by runn
 
 ## Installation
 
+### Cocoapods
 JHDate is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod "JHDate"
 ```
+### Manual
+Get a git clone and add ``JHDate.swift`` to your project.
+
+```shell
+git clone https://github.com/Hout/JHDate.git
+```
+
 
 ## Author
 
