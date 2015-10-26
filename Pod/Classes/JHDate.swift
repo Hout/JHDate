@@ -245,7 +245,6 @@ public extension JHDate {
         return (today() + 1.days)!
     }
 
-    public func components() -> NSDateComponents {
     /// Returns a NSDateComponents object containing a given date decomposed into components:
     ///     day, month, year, hour, minute, second, nanosecond, timeZone, calendar,
     ///     yearForWeekOfYear, weekOfYear, weekday, quarter and weekOfMonth.
@@ -253,6 +252,7 @@ public extension JHDate {
     ///
     /// - Returns: An NSDateComponents object containing date decomposed into the components as specified.
     ///
+    public var components : NSDateComponents {
         return calendar.components(JHDate.componentFlags, fromDate: date)
     }
 
@@ -295,7 +295,7 @@ public extension JHDate {
     /// - seealso: public func withValues(valueUnits: [(Int, NSCalendarUnit)]) -> JHDate?
     ///
     public func withValues(valueUnits: [(Int, NSCalendarUnit)]) -> JHDate? {
-        let newComponents = components()
+        let newComponents = components
         for valueUnit in valueUnits {
             let value = valueUnit.0
             let unit = valueUnit.1
@@ -398,6 +398,16 @@ public extension JHDate {
         return valueForComponent(.Weekday)
     }
 
+    /// The ordinal number of weekday units for the receiver.
+    /// Weekday ordinal units represent the position of the weekday within the next larger calendar unit,
+    ///     such as the month. For example, 2 is the weekday ordinal unit for the second Friday of the month.
+    ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var weekdayOrdinal: Int? {
+        return valueForComponent(.WeekdayOrdinal)
+    }
+
     /// The number of quarter units for the receiver.
     /// Weekday ordinal units represent the position of the weekday within the next larger calendar unit,
     ///     such as the month. For example, 2 is the weekday ordinal unit for the second Friday of the month.
@@ -416,6 +426,15 @@ public extension JHDate {
         return valueForComponent(.WeekOfMonth)
     }
 
+    /// Boolean value that indicates whether the month is a leap month.
+    /// ``YES`` if the month is a leap month, ``NO`` otherwise
+    ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var leapMonth: Bool {
+        return components.leapMonth
+    }
+
 }
 
 // MARK: - CustomStringConvertable delegate
@@ -425,11 +444,18 @@ extension JHDate : CustomStringConvertible {
     /// Returns a full description of the class
     ///
     public var description: String {
+        var descriptor: [String] = []
+
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "eee dd-MMM-yyyy GG HH:mm:ss.SSS zzz"
         dateFormatter.calendar = calendar
         dateFormatter.timeZone = timeZone
-        return dateFormatter.stringFromDate(self.date)
+        descriptor.append("Date \(dateFormatter.stringFromDate(self.date))")
+
+        descriptor.append("Calendar: \(calendar.description)")
+        descriptor.append("Time zone: \(timeZone.description)")
+
+        return descriptor.joinWithSeparator("\n")
     }
 
 }
@@ -505,7 +531,7 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public func startOf(unit: NSCalendarUnit) -> JHDate? {
-        let theseComponents = components()
+        let theseComponents = components
 
         let YMDUnits: NSCalendarUnit = [.Year, .Month, .Day]
         let YWDUnits: NSCalendarUnit = [.YearForWeekOfYear, .WeekOfYear, .Weekday]
@@ -569,17 +595,20 @@ public extension JHDate {
 
 public extension JHDate {
 
-    public func hasTheSame(unitFlags: NSCalendarUnit, asDate date: JHDate) -> Bool {
-        for flag in JHDate.componentFlagSet {
-            if unitFlags.contains(flag) {
-                if self.valueForComponent(flag) != date.valueForComponent(flag) {
-                    return false
-                }
-            }
-        }
-        return true
+    /// Returns an NSComparisonResult value that indicates the ordering of two given dates based on their components down to a given unit granularity.
+    ///
+    /// - Parameters:
+    ///     - date: date to compare.
+    ///     - toUnitGranularity: The smallest unit that must, along with all larger units, be equal for the given dates to be considered the same. 
+    ///         For possible values, see “[Calendar Units](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/c/tdef/NSCalendarUnit)”
+    ///
+    /// - Returns: NSOrderedSame if the dates are the same down to the given granularity, otherwise NSOrderedAscending or NSOrderedDescending.
+    ///
+    /// - seealso: [compareDate:toDate:toUnitGranularity:](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/occ/instm/NSCalendar/compareDate:toDate:toUnitGranularity:)
+    ///
+    public func compareDate(date: JHDate, toUnitGranularity unit: NSCalendarUnit) -> NSComparisonResult {
+        return calendar.compareDate(self.date, toDate: date.date, toUnitGranularity: unit)
     }
-
 
     /// Returns whether the given date is in today.
     ///
@@ -655,10 +684,6 @@ public extension JHDate {
     public func isEqualToDate(date: NSDate) -> Bool {
         return calendar.isDate(self.date, inSameDayAsDate: date)
     }
-
-    public func isEqualToDate(date: NSDate, toUnitGranularity unit: NSCalendarUnit) -> Bool {
-        return calendar.isDate(self.date, equalToDate: date, toUnitGranularity: unit)
-    }
 }
 
 // MARK: - Comparable delegate
@@ -679,7 +704,7 @@ extension JHDate : Comparable {}
 /// - Returns: a boolean indicating whether the receiver is equal to the given date
 ///
 public func ==(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate == rdate.timeIntervalSinceReferenceDate
+    return ldate.date.isEqualToDate(rdate.date)
 }
 
 /// Returns whether the given date is later than the receiver.
@@ -691,7 +716,7 @@ public func ==(ldate: JHDate, rdate: JHDate) -> Bool {
 /// - Returns: a boolean indicating whether the receiver is earlier than the given date
 ///
 public func <(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate < rdate.timeIntervalSinceReferenceDate
+    return ldate.date.compare(rdate.date) == .OrderedAscending
 }
 
 /// Returns whether the given date is earlier than the receiver.
@@ -703,7 +728,7 @@ public func <(ldate: JHDate, rdate: JHDate) -> Bool {
 /// - Returns: a boolean indicating whether the receiver is later than the given date
 ///
 public func >(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.timeIntervalSinceReferenceDate > rdate.timeIntervalSinceReferenceDate
+    return ldate.date.compare(rdate.date) == .OrderedDescending
 }
 
 
