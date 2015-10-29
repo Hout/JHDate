@@ -127,6 +127,13 @@ git clone https://github.com/Hout/JHDate.git
 
 Jeroen Houtzager, pls contact me through GitHub
 
+## 
+
+These libs & authors inspired me to this code:
+
+- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti
+
+
 ## License
 
 JHDate is available under the MIT license. See the LICENSE file for more info.
