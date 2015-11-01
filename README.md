@@ -123,10 +123,12 @@ git clone https://github.com/Hout/JHDate.git
 ```
 
 ## Design Decisions
+I have taken the following decisions when setting up the library. I welcome  feedback on them.
+
 Decision | Rationale
 ------------- | -------------
 Do not include an initialiser from string  | That is too complicated with all the different ways of notation in the world. It would have too little benefit next to the currently available convenience intialisers instead.
-Do not attempt to mimic all properties and functions of the NSDateFormatter, NSDateComponents etc. E.g. NSDateFormatter's class func ``localizedStringFromDate`` | Sometimes it is much easier to use the ``date`` property from ``JHDate`` instead.
+Do not attempt to mimic all properties and functions of the NSDateFormatter, NSDateComponents etc. E.g. NSDateFormatter's ``localizedStringFromDate`` or ``weekdaySymbols`` | Sometimes it is just easier to use the ``date`` property from ``JHDate`` instead.
 
 
 ## Author

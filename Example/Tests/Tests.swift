@@ -277,6 +277,53 @@ class JHDateSpec: QuickSpec {
                     expect(jhdate.formatter.timeZone) == testTimeZone
                 }
 
+                it("should return a proper string by default") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    date.dateStyle = .MediumStyle
+
+                    let formatter = NSDateFormatter()
+                    formatter.dateStyle = .MediumStyle
+                    formatter.calendar = date.calendar
+                    formatter.locale = date.locale
+                    formatter.timeZone = date.timeZone
+
+                    expect(date.toString()) == formatter.stringFromDate(date.date)
+                }
+                
+                it("should return a proper string with specified locale") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    date.dateStyle = .MediumStyle
+                    date.locale = NSLocale(localeIdentifier: "uz_Cyrl_UZ")
+
+                    expect(date.toString()) == "1999 Dek 31"
+                }
+                
+                it("should return a proper string with specified calendar") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    date.dateStyle = .MediumStyle
+                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+
+                    expect(date.toString()) == "31 Dec 2542 BE"
+                }
+                
+                it("should return a proper string with specified timezone") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    date.timeStyle = .MediumStyle
+                    date.timeZone = NSTimeZone(forSecondsFromGMT: 12345)
+
+                    expect(date.toString()) == "02:26:00"
+                }
+                
+                it("should return a proper date string with relative conversion") {
+                    let date = JHDate()
+                    let date2 = (date + 2.days)!
+                    date2.dateStyle = .MediumStyle
+                    date2.locale = NSLocale(localeIdentifier: "fr_FR")
+                    expect(date2.toRelativeString()) == "après-demain"
+                    date2.locale = NSLocale(localeIdentifier: "nl_NL")
+                    expect(date2.toRelativeString()) == "Overmorgen"
+                }
+
             }
         }
 
