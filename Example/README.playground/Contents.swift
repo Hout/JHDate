@@ -1,9 +1,6 @@
-# JHDate
+/*:
 
-[![Build Status](https://travis-ci.org/Hout/JHDate.svg?branch=master)](https://travis-ci.org/Hout/JHDate)
-[![Version](https://img.shields.io/cocoapods/v/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
-[![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
-[![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
+# JHDate
 
 JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents. Thus offering date functions with a flexibility that I was looking for:
 
@@ -18,8 +15,8 @@ JHDate is a wrapper around NSDate that exposes the properties of NSDateComponent
 
 ### Examples
 Check out the playground:
+*/
 
-```swift
 import JHDate
 
 //: #### Initialisers
@@ -32,6 +29,14 @@ let determinedDate = JHDate(year: 2011, month: 2, day: 11)!
 //: Create a determined date in a different time zone
 let usaTimeZone = NSTimeZone(abbreviation: "EST")!
 let usaDate = JHDate(year: 2011, month: 2, day: 11, hour: 14, timeZone: usaTimeZone)!
+
+//: Mind that default values for JHDate(year etc) are taken from the reference date,
+//: which is 1 January 2001, 00:00:00.000 in your default time zone and against your current calendar.
+
+//: Week oriented initiailisations are also possible: first week of 2016:
+let weekDate = JHDate(yearForWeekOfYear: 2016, weekOfYear: 1, weekday: 1)!
+//: In Europe this week starts in 2015 despite the year for the week that is 2016.
+//: That is because the Thursday of this week is in 2016 as specified by ISO 8601
 
 //: Create a determined date in a different calendar
 let hebrewCalendar = NSCalendar(identifier: NSCalendarIdentifierHebrew)
@@ -60,11 +65,13 @@ let newDate2 = oneWeekLater.withValues([(13, .Hour), (12, .Minute)])!
 //: Change time zone
 newDate2.timeZone = usaTimeZone
 
-//: Change calendar
+//: Change and time zone calendar to Islamic in Dubai
 newDate2.calendar = NSCalendar(identifier: NSCalendarIdentifierIslamicCivil)!
+newDate2.timeZone = NSTimeZone(abbreviation: "GST")!
 
-//: Again
-newDate.calendar = NSCalendar(identifier: NSCalendarIdentifierIndian)!
+//: Again, but now we go to New Delhi
+newDate2.calendar = NSCalendar(identifier: NSCalendarIdentifierIndian)!
+newDate2.timeZone = NSTimeZone(abbreviation: "IST")!
 
 //: #### Comparisons
 //: JHDate conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
@@ -94,8 +101,11 @@ date1 < date2
 
 //: QED: same outcome!
 
+//: #### Display
+//: JHDate conforms to the ConvertString protocol
+print(date2.description)
 
-```
+/*:
 
 ## Usage
 
@@ -115,7 +125,7 @@ it, simply add the following line to your Podfile:
 ```ruby
 pod "JHDate"
 ```
-### Manual
+### Manually
 Get a git clone and add ``JHDate.swift`` to your project.
 
 ```shell
@@ -127,13 +137,7 @@ git clone https://github.com/Hout/JHDate.git
 
 Jeroen Houtzager, pls contact me through GitHub
 
-## 
-
-These libs & authors inspired me to this code:
-
-- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti
-
-
 ## License
 
 JHDate is available under the MIT license. See the LICENSE file for more info.
+*/
