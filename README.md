@@ -5,9 +5,9 @@
 [![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 
-JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents. Thus offering date functions with a flexibility that I was looking for:
+JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. We are not there yet, but the intention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
 
-- Use the object as an NSDate. I.e. as an absolute time.
+- Use the object as an NSDate. I.e. as an absolute time. 
 - Contains a date (NSDate), a calendar (NSCalendar) and a timeZone (NSTimeZone) property
 - Offers many NSDate, NSCalendar & NSDateComponent vars & funcs
 - Initialise a date with many combinations of components
@@ -122,6 +122,14 @@ Get a git clone and add ``JHDate.swift`` to your project.
 git clone https://github.com/Hout/JHDate.git
 ```
 
+## Design Decisions
+I have taken the following decisions when setting up the library. I welcome  feedback on them.
+
+Decision | Rationale
+------------- | -------------
+Do not include an initialiser from string  | That is too complicated with all the different ways of notation in the world. It would have too little benefit next to the currently available convenience intialisers instead.
+Do not attempt to mimic all properties and functions of the NSDateFormatter, NSDateComponents etc. E.g. NSDateFormatter's ``localizedStringFromDate`` or ``weekdaySymbols`` | Sometimes it is just easier to use the ``date`` property from ``JHDate`` instead.
+
 
 ## Author
 
@@ -131,7 +139,7 @@ Jeroen Houtzager, pls contact me through GitHub
 
 These libs & authors inspired me to this code:
 
-- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti
+- [SwiftDate](https://github.com/malcommac/SwiftDate) from Daniele Margutti. I recommend this one if you are looking for a plain Swift NSDate extension.
 
 
 ## License

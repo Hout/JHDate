@@ -61,6 +61,17 @@ let newDate = oneWeekLater.withValue(14, forUnit: .Hour)!
 //: ... or with a combination of components
 let newDate2 = oneWeekLater.withValues([(13, .Hour), (12, .Minute)])!
 
+//: #### StartOF & EndOF
+//: Create new dates based on this week's start & end
+let startOfWeek = newDate.startOf(.WeekOfYear)
+let endOfWeek = newDate.endOf(.WeekOfYear)
+
+//: Create new dates based on this quarter's start & end
+let startOfQuarter = newDate.startOf(.Quarter)
+let endOfQuarter = newDate.endOf(.Quarter)
+
+
+
 //: #### Conversions
 //: Change time zone
 newDate2.timeZone = usaTimeZone
