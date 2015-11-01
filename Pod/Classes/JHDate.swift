@@ -103,6 +103,11 @@ public class JHDate {
             formatter = aFormatter!
             timeZone = aTimeZone!
             locale = aLocale
+
+            // Assign formatter fields
+            formatter.calendar = calendar
+            formatter.timeZone = timeZone
+            formatter.locale = locale
     }
 
     /// Create a default date components to use internally with the init with date components

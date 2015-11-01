@@ -25,6 +25,7 @@ extension JHDate : CustomStringConvertible {
 
         descriptor.append("Calendar: \(calendar)")
         descriptor.append("Time zone: \(timeZone)")
+        descriptor.append("Locale: \(locale)")
 
         return descriptor.joinWithSeparator("\n")
     }

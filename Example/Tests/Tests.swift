@@ -38,6 +38,12 @@ class JHDateSpec: QuickSpec {
                     expect(date.calendar) == calendar
                 }
 
+                it("should have the specified locale") {
+                    let locale = NSLocale(localeIdentifier: "fr_FR")
+                    let date = JHDate(locale: locale)
+                    expect(date.locale) == locale
+                }
+
                 it("should have the specified time zone") {
                     let timeZone = NSTimeZone(forSecondsFromGMT: 12345)
                     let date = JHDate(timeZone: timeZone)
@@ -52,7 +58,7 @@ class JHDateSpec: QuickSpec {
                     let expectedInterval = NSTimeInterval(Double(nsDate.timeIntervalSinceReferenceDate) + Double(timeZone.secondsFromGMT))
                     expect(jhDate.timeIntervalSinceReferenceDate) ≈ (expectedInterval, 1)
                 }
-                
+
                 it("should return the sepcified date") {
                     let calendar = NSCalendar(identifier: NSCalendarIdentifierJapanese)!
                     let components = NSDateComponents()
@@ -108,7 +114,7 @@ class JHDateSpec: QuickSpec {
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
-                    expect(date.day) == 6
+                    expect(date.day) == 13
                     expect(date.hour) == 0
                     expect(date.minute) == 0
                     expect(date.second) == 0
@@ -236,11 +242,12 @@ class JHDateSpec: QuickSpec {
                     expect(descriptions[9]) == "Europe/Paris"
                     expect(descriptions[10]) == "(GMT+1)"
                     expect(descriptions[11]) == "offset"
-                    expect(descriptions[12]) == "3600"
+                    expect(descriptions[12]) == "3600\nLocale:"
                 }
             }
 
             context("date formatter") {
+
                 it("should initiate default date formatter") {
                     let jhdate = JHDate()
                     let dateFormatter = NSDateFormatter()
@@ -251,241 +258,260 @@ class JHDateSpec: QuickSpec {
                     expect(jhdate.formatter.calendar) == dateFormatter.calendar
                     expect(jhdate.formatter.timeZone) == dateFormatter.timeZone
                 }
-            }
 
-            context("comparisons") {
-
-                it("should return true for greater than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 31)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date1 > date2) == true
+                it("should assign calendar properly") {
+                    let testCalendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+                    let jhdate = JHDate(calendar: testCalendar)
+                    expect(jhdate.formatter.calendar.calendarIdentifier) == testCalendar.calendarIdentifier
                 }
 
-                it("should return false for greater than comparing") {
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)
-
-                    expect(date2 > date2) == false
+                it("should assign locale properly") {
+                    let testLocale = NSLocale(localeIdentifier: "en_NZ")
+                    let jhdate = JHDate(locale: testLocale)
+                    expect(jhdate.formatter.locale) == testLocale
                 }
 
-                it("should return false for greater than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 31)
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)
-
-                    expect(date2 > date1) == false
+                it("should assign time zone properly") {
+                    let testTimeZone = NSTimeZone(abbreviation: "EST")!
+                    let jhdate = JHDate(timeZone: testTimeZone)
+                    expect(jhdate.formatter.timeZone) == testTimeZone
                 }
 
-                it("should return true for less than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 29)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date1 < date2) == true
-                }
-
-                it("should return false for less than comparing") {
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date2 < date2) == false
-                }
-
-                it("should return false for less than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 29)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date2 < date1) == false
-                }
-
-                it("should return true for greater-equal than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 31)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date1 >= date2) == true
-                }
-
-                it("should return false for greater-equal than comparing") {
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date2 >= date2) == true
-                }
-
-                it("should return false for greater-equal than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 31)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date2 >= date1) == false
-                }
-
-                it("should return true for less-equal than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 29)!
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date1 <= date2) == true
-                }
-
-                it("should return false for less-equal than comparing") {
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)!
-
-                    expect(date2) <= date2
-                }
-
-                it("should return false for less-equal than comparing") {
-                    let date1 = JHDate(year: 1999, month: 12, day: 29)
-                    let date2 = JHDate(year: 1999, month: 12, day: 30)
-
-                    expect(date2 <= date1) == false
-                }
-            }
-
-            context("Int extensions") {
-
-                it("should return proper integer extension values") {
-                    let expectedComponents = NSDateComponents()
-                    expectedComponents.day = 1
-                    expect(1.days) == expectedComponents
-                }
-
-            }
-
-            context("operations") {
-
-                it("should add properly") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
-                    print(date)
-                    let testDate = date + 1.days
-                    print(testDate)
-                    let expectedDate = JHDate(year: 2000, month: 1, day: 1)
-
-                    expect(testDate) == expectedDate
-                }
-
-                it("should add properly") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
-                    let testDate = (date + 1.weeks)!
-
-                    expect(testDate.year) == 2000
-                    expect(testDate.month) == 1
-                    expect(testDate.day) == 7
-                }
-
-                it("should subtract properly") {
-                    let date = JHDate(year: 2000, month: 1, day: 1)!
-                    let testDate = date - 1.days
-                    let expectedDate = JHDate(year: 1999, month: 12, day: 31)
-
-                    expect(testDate) == expectedDate
-                }
-
-                it("should differ properly") {
-                    let date1 = JHDate(year: 2001, month: 2, day: 1)!
-                    let date2 = JHDate(year: 2003, month: 1, day: 10)!
-                    let components = date1.difference(date2, unitFlags: [.Month, .Year])
-
-                    let expectedComponents = NSDateComponents()
-                    expectedComponents.month = 11
-                    expectedComponents.year = 1
-
-                    expect(components) == expectedComponents
-                }
-
-            }
-
-            context("start of unit") {
-
-                it("should return start of day for time during day") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.startOf(.Day)!
-
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 12
-                    expect(testDate.day) == 31
-                    expect(testDate.hour) == 0
-                    expect(testDate.minute) == 0
-                    expect(testDate.second) == 0
-                    expect(testDate.nanosecond) == 0
-                }
-
-                it("should return start of day for midnight") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 0, minute: 0, second: 0, nanosecond: 0)!
-                    let testDate = date.startOf(.Day)!
-
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 12
-                    expect(testDate.day) == 31
-                    expect(testDate.hour) == 0
-                    expect(testDate.minute) == 0
-                    expect(testDate.second) == 0
-                    expect(testDate.nanosecond) == 0
-                }
-
-                it("should return start of month") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.startOf(.Month)!
-
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 12
-                    expect(testDate.day) == 1
-                    expect(testDate.hour) == 0
-                    expect(testDate.minute) == 0
-                    expect(testDate.second) == 0
-                    expect(testDate.nanosecond) == 0
-                }
-
-                it("should return start of year") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.startOf(.Year)!
-
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 1
-                    expect(testDate.day) == 1
-                    expect(testDate.hour) == 0
-                    expect(testDate.minute) == 0
-                    expect(testDate.second) == 0
-                    expect(testDate.nanosecond) == 0
-                }
-                
-            }
-
-            context("end of unit") {
-
-                it("should return end of day") {
-                    let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.endOf(.Day)!
-
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 1
-                    expect(testDate.day) == 1
-                    expect(testDate.hour) == 23
-                    expect(testDate.minute) == 59
-                    expect(testDate.second) == 59
-                }
-                
-                it("should return end of month") {
-                    let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.endOf(.Month)!
-                    
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 1
-                    expect(testDate.day) == 31
-                    expect(testDate.hour) == 23
-                    expect(testDate.minute) == 59
-                    expect(testDate.second) == 59
-                }
-                
-                it("should return end of year") {
-                    let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
-                    let testDate = date.endOf(.Year)!
-                    
-                    expect(testDate.year) == 1999
-                    expect(testDate.month) == 12
-                    expect(testDate.day) == 31
-                    expect(testDate.hour) == 23
-                    expect(testDate.minute) == 59
-                    expect(testDate.second) == 59
-                }
-                
             }
         }
-        
+
+        context("comparisons") {
+
+            it("should return true for greater than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date1 > date2) == true
+            }
+
+            it("should return false for greater than comparing") {
+                let date2 = JHDate(year: 1999, month: 12, day: 30)
+
+                expect(date2 > date2) == false
+            }
+
+            it("should return false for greater than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)
+                let date2 = JHDate(year: 1999, month: 12, day: 30)
+
+                expect(date2 > date1) == false
+            }
+
+            it("should return true for less than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 29)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date1 < date2) == true
+            }
+
+            it("should return false for less than comparing") {
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date2 < date2) == false
+            }
+
+            it("should return false for less than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 29)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date2 < date1) == false
+            }
+
+            it("should return true for greater-equal than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date1 >= date2) == true
+            }
+
+            it("should return false for greater-equal than comparing") {
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date2 >= date2) == true
+            }
+
+            it("should return false for greater-equal than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date2 >= date1) == false
+            }
+
+            it("should return true for less-equal than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 29)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date1 <= date2) == true
+            }
+
+            it("should return false for less-equal than comparing") {
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date2) <= date2
+            }
+
+            it("should return false for less-equal than comparing") {
+                let date1 = JHDate(year: 1999, month: 12, day: 29)
+                let date2 = JHDate(year: 1999, month: 12, day: 30)
+
+                expect(date2 <= date1) == false
+            }
+        }
+
+        context("Int extensions") {
+
+            it("should return proper integer extension values") {
+                let expectedComponents = NSDateComponents()
+                expectedComponents.day = 1
+                expect(1.days) == expectedComponents
+            }
+
+        }
+
+        context("operations") {
+
+            it("should add properly") {
+                let date = JHDate(year: 1999, month: 12, day: 31)!
+                print(date)
+                let testDate = date + 1.days
+                print(testDate)
+                let expectedDate = JHDate(year: 2000, month: 1, day: 1)
+
+                expect(testDate) == expectedDate
+            }
+
+            it("should add properly") {
+                let date = JHDate(year: 1999, month: 12, day: 31)!
+                let testDate = (date + 1.weeks)!
+
+                expect(testDate.year) == 2000
+                expect(testDate.month) == 1
+                expect(testDate.day) == 7
+            }
+
+            it("should subtract properly") {
+                let date = JHDate(year: 2000, month: 1, day: 1)!
+                let testDate = date - 1.days
+                let expectedDate = JHDate(year: 1999, month: 12, day: 31)
+
+                expect(testDate) == expectedDate
+            }
+
+            it("should differ properly") {
+                let date1 = JHDate(year: 2001, month: 2, day: 1)!
+                let date2 = JHDate(year: 2003, month: 1, day: 10)!
+                let components = date1.difference(date2, unitFlags: [.Month, .Year])
+
+                let expectedComponents = NSDateComponents()
+                expectedComponents.month = 11
+                expectedComponents.year = 1
+
+                expect(components) == expectedComponents
+            }
+
+        }
+
+        context("start of unit") {
+
+            it("should return start of day for time during day") {
+                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.startOf(.Day)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+
+            it("should return start of day for midnight") {
+                let date = JHDate(year: 1999, month: 12, day: 31, hour: 0, minute: 0, second: 0, nanosecond: 0)!
+                let testDate = date.startOf(.Day)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+
+            it("should return start of month") {
+                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.startOf(.Month)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 1
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+
+            it("should return start of year") {
+                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.startOf(.Year)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 1
+                expect(testDate.day) == 1
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+
+        }
+
+        context("end of unit") {
+
+            it("should return end of day") {
+                let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.endOf(.Day)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 1
+                expect(testDate.day) == 1
+                expect(testDate.hour) == 23
+                expect(testDate.minute) == 59
+                expect(testDate.second) == 59
+            }
+
+            it("should return end of month") {
+                let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.endOf(.Month)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 1
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 23
+                expect(testDate.minute) == 59
+                expect(testDate.second) == 59
+            }
+            
+            it("should return end of year") {
+                let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                let testDate = date.endOf(.Year)!
+                
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 23
+                expect(testDate.minute) == 59
+                expect(testDate.second) == 59
+            }
+            
+        }
     }
     
 }
+
