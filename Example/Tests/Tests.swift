@@ -240,6 +240,19 @@ class JHDateSpec: QuickSpec {
                 }
             }
 
+            context("date formatter") {
+                it("should initiate default date formatter") {
+                    let jhdate = JHDate()
+                    let dateFormatter = NSDateFormatter()
+
+                    expect(jhdate.dateFormat) == dateFormatter.dateFormat
+                    expect(jhdate.dateStyle) == dateFormatter.dateStyle
+                    expect(jhdate.timeStyle) == dateFormatter.timeStyle
+                    expect(jhdate.formatter.calendar) == dateFormatter.calendar
+                    expect(jhdate.formatter.timeZone) == dateFormatter.timeZone
+                }
+            }
+
             context("comparisons") {
 
                 it("should return true for greater than comparing") {
@@ -429,7 +442,7 @@ class JHDateSpec: QuickSpec {
                     expect(testDate.second) == 0
                     expect(testDate.nanosecond) == 0
                 }
-
+                
             }
 
             context("end of unit") {

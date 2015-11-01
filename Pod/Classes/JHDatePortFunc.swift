@@ -233,5 +233,5 @@ public extension JHDate {
         // Wanted to use the library function below, but that does not work properly...
         // return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
-    
+
 }
