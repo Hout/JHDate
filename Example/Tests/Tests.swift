@@ -221,6 +221,25 @@ class JHDateSpec: QuickSpec {
                 }
             }
 
+            context("descriptions") {
+                it("Should output a proper description") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"))!
+                    let descriptions = date.description.componentsSeparatedByString(" ")
+
+                    expect(descriptions[0]) == "Date"
+                    expect(descriptions[1]) == "Fri"
+                    expect(descriptions[2]) == "31-Dec-1999"
+                    expect(descriptions[3]) == "AD"
+                    expect(descriptions[4]) == "23:59:59.500"
+                    expect(descriptions[5]) == "GMT+1\nCalendar:"
+                    expect(descriptions[8]) == "zone:"
+                    expect(descriptions[9]) == "Europe/Paris"
+                    expect(descriptions[10]) == "(GMT+1)"
+                    expect(descriptions[11]) == "offset"
+                    expect(descriptions[12]) == "3600"
+                }
+            }
+
             context("comparisons") {
 
                 it("should return true for greater than comparing") {
@@ -346,7 +365,7 @@ class JHDateSpec: QuickSpec {
                 it("should differ properly") {
                     let date1 = JHDate(year: 2001, month: 2, day: 1)!
                     let date2 = JHDate(year: 2003, month: 1, day: 10)!
-                    let components = date1.difference(date2.date, unitFlags: [.Month, .Year])
+                    let components = date1.difference(date2, unitFlags: [.Month, .Year])
 
                     let expectedComponents = NSDateComponents()
                     expectedComponents.month = 11

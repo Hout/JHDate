@@ -23,16 +23,16 @@ public extension JHDate {
     ///
     /// - note: This value is calculated in the context of the calendar of the receiver
     ///
-    public func difference(toDate: NSDate, unitFlags: NSCalendarUnit) -> NSDateComponents? {
-        return calendar.components(unitFlags, fromDate: self.date, toDate: toDate, options: NSCalendarOptions(rawValue: 0))
+    public func difference(toDate: JHDate, unitFlags: NSCalendarUnit) -> NSDateComponents? {
+        return calendar.components(unitFlags, fromDate: self.date, toDate: toDate.date, options: NSCalendarOptions(rawValue: 0))
     }
 
-    /// Returns a new NSDate object representing the absolute time calculated by adding given components to the receiver.
+    /// Returns a new JHDate object representing the absolute time calculated by adding given components to the receiver.
     ///
     /// - Parameters:
     ///     - components: the components to add to the receiver
     ///
-    /// - Returns: A new NSDate object representing the absolute time calculated by adding to date the calendrical components specified by components.
+    /// - Returns: A new JHDate object representing the absolute time calculated by adding to date the calendrical components specified by components.
     ///
     /// - note: This value is calculated in the context of the calendar of the receiver
     ///
@@ -45,13 +45,13 @@ public extension JHDate {
     }
 }
 
-/// Returns a new NSDate object representing a new time calculated by subtracting given right hand components from the left hand date.
+/// Returns a new JHDate object representing a new time calculated by subtracting given right hand components from the left hand date.
 ///
 /// - Parameters:
 ///     - lhs: the date to subtract components from
 ///     - rhs: the components to subtract from the date
 ///
-/// - Returns: A new NSDate object representing the time calculated by subtracting from date the calendrical components specified by components.
+/// - Returns: A new JHDate object representing the time calculated by subtracting from date the calendrical components specified by components.
 ///
 /// - note: This value is calculated in the context of the calendar of the date
 ///
@@ -59,13 +59,13 @@ public func - (lhs: JHDate, rhs: NSDateComponents) -> JHDate? {
     return lhs + (-rhs)
 }
 
-/// Returns a new NSDate object representing a new time calculated by adding given right hand components to the left hand date.
+/// Returns a new JHDate object representing a new time calculated by adding given right hand components to the left hand date.
 ///
 /// - Parameters:
 ///     - lhs: the date to add the components to
 ///     - rhs: the components to add to the date
 ///
-/// - Returns: A new NSDate object representing the time calculated by adding to date the calendrical components specified by components.
+/// - Returns: A new JHDate object representing the time calculated by adding to date the calendrical components specified by components.
 ///
 /// - note: This value is calculated in the context of the calendar of the date
 ///

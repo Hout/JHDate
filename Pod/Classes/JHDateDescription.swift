@@ -23,8 +23,8 @@ extension JHDate : CustomStringConvertible {
         dateFormatter.timeZone = timeZone
         descriptor.append("Date \(dateFormatter.stringFromDate(self.date))")
 
-        descriptor.append("Calendar: \(calendar.description)")
-        descriptor.append("Time zone: \(timeZone.description)")
+        descriptor.append("Calendar: \(calendar)")
+        descriptor.append("Time zone: \(timeZone)")
 
         return descriptor.joinWithSeparator("\n")
     }
