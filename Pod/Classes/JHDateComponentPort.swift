@@ -42,7 +42,7 @@ public extension JHDate {
 
     /// Returns a NSDateComponents object containing a given date decomposed into components:
     ///     day, month, year, hour, minute, second, nanosecond, timeZone, calendar,
-    ///     yearForWeekOfYear, weekOfYear, weekday, quarter and weekOfMonth.
+    ///     yearForWeekOfYear, weekOfYear, weekday<s>, quarter</s> and weekOfMonth.
     /// Values returned are in the context of the calendar and time zone properties.
     ///
     /// - Returns: An NSDateComponents object containing date decomposed into the components as specified.
@@ -203,6 +203,7 @@ public extension JHDate {
         return valueForComponent(.WeekdayOrdinal)
     }
 
+    /** QUARTER IS NOT INCLUDED DUE TO INCORRECT REPRESENTATION OF QUARTER IN NSCALENDAR
     /// The number of quarter units for the receiver.
     /// Weekday ordinal units represent the position of the weekday within the next larger calendar unit,
     ///     such as the month. For example, 2 is the weekday ordinal unit for the second Friday of the month.
@@ -212,6 +213,7 @@ public extension JHDate {
     public var quarter: Int? {
         return valueForComponent(.Quarter)
     }
+    **/
 
     /// The week number in the month for the receiver.
     ///
