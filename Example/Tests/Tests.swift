@@ -255,8 +255,14 @@ class JHDateSpec: QuickSpec {
             context("date formatter") {
 
                 it("should initiate default date formatter") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
+                    let testCalendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
+                    let testTimeZone = NSTimeZone(abbreviation: "CET")
+                    let testLocale = NSLocale(localeIdentifier: "nl_NL")
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: testCalendar, timeZone: testTimeZone, locale: testLocale)!
                     let dateFormatter = NSDateFormatter()
+                    dateFormatter.calendar = testCalendar
+                    dateFormatter.timeZone = testTimeZone
+                    dateFormatter.locale = testLocale
 
                     expect(date.dateFormat) == dateFormatter.dateFormat
                     expect(date.dateStyle) == dateFormatter.dateStyle
