@@ -61,6 +61,33 @@ let newDate = oneWeekLater.withValue(14, forUnit: .Hour)!
 //: ... or with a combination of components
 let newDate2 = oneWeekLater.withValues([(13, .Hour), (12, .Minute)])!
 
+//: #### Components
+newDate2.year
+newDate2.month
+newDate2.day
+
+newDate2.yearForWeekOfYear
+newDate2.weekOfYear
+newDate2.weekday
+
+newDate2.hour
+newDate2.minute
+newDate2.second
+
+//: #### StartOF & EndOF
+//: Create new dates based on this week's start & end
+let startOfWeek = newDate.startOf(.WeekOfYear)
+let endOfWeek = newDate.endOf(.WeekOfYear)
+
+//: Create new dates based on this day's start & end
+let startOfDay = newDate.startOf(.Day)
+let endOfDay = newDate.endOf(.Day)
+
+//: Create new dates based on this day's start & end
+let startOfYear = newDate.startOf(.Year)
+let endOfYear = newDate.endOf(.Year)
+
+
 //: #### Conversions
 //: Change time zone
 newDate2.timeZone = usaTimeZone
@@ -105,39 +132,26 @@ date1 < date2
 //: JHDate conforms to the ConvertString protocol
 print(date2.description)
 
-/*:
-
-## Usage
-
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
-
-iOS 9 is required.
-The test code requires Quick and Nimble to be implemented. You can do so by running ``pod install`` in the ``Examples`` folder.
-
-## Installation
-
-### Cocoapods
-JHDate is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "JHDate"
-```
-### Manually
-Get a git clone and add ``JHDate.swift`` to your project.
-
-```shell
-git clone https://github.com/Hout/JHDate.git
-```
+//: Various NSDateFormatter properties are ported
+let date3 = (date1 + 7.hours)!
+date3.timeZone = NSTimeZone(abbreviation: "UTC")!
+date3.dateStyle = .ShortStyle
+date3.toString()
+date3.dateStyle = .MediumStyle
+date3.toString()
+date3.dateStyle = .LongStyle
+date3.toString()
+date3.dateStyle = .NoStyle
+date3.toString()
+date3.timeStyle = .ShortStyle
+date3.toString()
+date3.timeStyle = .MediumStyle
+date3.toString()
+date3.timeStyle = .LongStyle
+date3.toString()
+date3.timeStyle = .NoStyle
+date3.toString()
+date3.dateFormat = "dd-MMM-yyyy HH:mm"
+date3.toString()
 
 
-## Author
-
-Jeroen Houtzager, pls contact me through GitHub
-
-## License
-
-JHDate is available under the MIT license. See the LICENSE file for more info.
-*/
