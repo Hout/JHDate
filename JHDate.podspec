@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "JHDate"
-  s.version          = "0.3.0"
+  s.version          = "0.3.1"
 s.summary          = "Yet another Swift date class"
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -27,11 +27,10 @@ JHDate is a wrapper around NSDate that exposes the properties of NSDateComponent
 
 - Use the object as an NSDate. I.e. as an absolute time.
 - Contains a date (NSDate), a calendar (NSCalendar) and a timeZone (NSTimeZone) property
-- Offers all NSDate & NSDateComponent vars & methods
+- Offers NSDate & NSDateComponent vars & methods
 - Initialise a date with any combination of components
 - Use default values for initialisation if desired
 - Calendar & time zone can be changed, properties change along
-- Default date is `NSDate()`
 - Default calendar is `NSCalendar.currentCalendar()`
 - Default time zone is `NSTimeZone.localTimeZone()`
 - Implements the Comparable protocol betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
