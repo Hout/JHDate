@@ -110,8 +110,8 @@ class JHDateSpec: QuickSpec {
 
 
                 it("should return a midnight date with nil YWD initialisation") {
-                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4)!
-                    date.locale = NSLocale(localeIdentifier: "nl_NL")
+                    let localeNL = NSLocale(localeIdentifier: "nl_NL")
+                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4, locale: localeNL)!
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
@@ -229,8 +229,13 @@ class JHDateSpec: QuickSpec {
             }
 
             context("descriptions") {
+
+                var date: JHDate!
+                beforeEach {
+                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
+                }
+
                 it("Should output a proper description") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"))!
                     let descriptions = date.description.componentsSeparatedByString(" ")
 
                     expect(descriptions[0]) == "Date"
@@ -250,14 +255,14 @@ class JHDateSpec: QuickSpec {
             context("date formatter") {
 
                 it("should initiate default date formatter") {
-                    let jhdate = JHDate()
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
                     let dateFormatter = NSDateFormatter()
 
-                    expect(jhdate.dateFormat) == dateFormatter.dateFormat
-                    expect(jhdate.dateStyle) == dateFormatter.dateStyle
-                    expect(jhdate.timeStyle) == dateFormatter.timeStyle
-                    expect(jhdate.formatter.calendar) == dateFormatter.calendar
-                    expect(jhdate.formatter.timeZone) == dateFormatter.timeZone
+                    expect(date.dateFormat) == dateFormatter.dateFormat
+                    expect(date.dateStyle) == dateFormatter.dateStyle
+                    expect(date.timeStyle) == dateFormatter.timeStyle
+                    expect(date.formatter.calendar) == dateFormatter.calendar
+                    expect(date.formatter.timeZone.secondsFromGMT) == dateFormatter.timeZone.secondsFromGMT
                 }
 
                 it("should assign calendar properly") {
@@ -301,18 +306,18 @@ class JHDateSpec: QuickSpec {
                 
                 it("should return a proper string with specified calendar") {
                     let date = JHDate(year: 1999, month: 12, day: 31)!
-                    date.dateStyle = .MediumStyle
-                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+                    date.dateFormat = "dd MMM YYYY"
+                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierHebrew)!
 
-                    expect(date.toString()) == "31 Dec 2542 BE"
+                    expect(date.toString()) == "22 Tevet 5760"
                 }
                 
                 it("should return a proper string with specified timezone") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
                     date.timeStyle = .MediumStyle
                     date.timeZone = NSTimeZone(forSecondsFromGMT: 12345)
 
-                    expect(date.toString()) == "02:26:00"
+                    expect(date.toString()) == "02:25:59"
                 }
                 
                 it("should return a proper date string with relative conversion") {

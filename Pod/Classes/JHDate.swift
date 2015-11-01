@@ -94,15 +94,21 @@ public class JHDate {
     ///     - timeZone:   the time zone to work with, default is the default time zone
     ///
     public init(date aDate: NSDate? = NSDate(),
-        calendar aCalendar: NSCalendar? = NSCalendar.currentCalendar(),
-        timeZone aTimeZone: NSTimeZone? = NSTimeZone.defaultTimeZone(),
-        locale aLocale: NSLocale? = NSLocale.currentLocale(),
-        formatter aFormatter: NSDateFormatter? = NSDateFormatter()) {
+        calendar aCalendar: NSCalendar? = nil,
+        timeZone aTimeZone: NSTimeZone? = nil,
+        locale aLocale: NSLocale? = nil,
+        formatter aFormatter: NSDateFormatter? = nil) {
             date = aDate!
-            calendar = aCalendar!
-            formatter = aFormatter!
-            timeZone = aTimeZone!
-            locale = aLocale
+            calendar = aCalendar ?? NSCalendar.currentCalendar()
+            formatter = aFormatter ?? NSDateFormatter()
+            if let thisTimeZone = aTimeZone {
+                timeZone = thisTimeZone
+            }
+            if let thisLocale = aLocale {
+                locale = thisLocale
+            } else if calendar.locale == nil {
+                calendar.locale = NSLocale.currentLocale()
+            }
 
             // Assign formatter fields
             formatter.calendar = calendar
@@ -141,7 +147,8 @@ public class JHDate {
         second: Int? = nil,
         nanosecond: Int? = nil,
         timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil) {
+        calendar: NSCalendar? = nil,
+        locale aLocale: NSLocale? = nil) {
 
             let defaultComponents = JHDate.defaultComponents()
 
@@ -156,6 +163,7 @@ public class JHDate {
             components.nanosecond = nanosecond ?? defaultComponents.nanosecond
             components.timeZone = timeZone ?? defaultComponents.timeZone
             components.calendar = calendar ?? defaultComponents.calendar
+            if let thisLocale = aLocale { components.calendar?.locale = thisLocale }
 
             self.init(components: components)
     }
@@ -176,7 +184,8 @@ public class JHDate {
         second: Int? = nil,
         nanosecond: Int? = nil,
         timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil) {
+        calendar: NSCalendar? = nil,
+        locale aLocale: NSLocale? = nil) {
 
             let defaultComponents = JHDate.defaultComponents()
 
@@ -191,6 +200,7 @@ public class JHDate {
             components.nanosecond = nanosecond ?? defaultComponents.nanosecond
             components.timeZone = timeZone ?? defaultComponents.timeZone
             components.calendar = calendar ?? defaultComponents.calendar
+            if let thisLocale = aLocale { components.calendar?.locale = thisLocale }
 
             self.init(components: components)
     }
@@ -225,7 +235,7 @@ public class JHDate {
         }
 
         let thisDate = components.calendar!.dateFromComponents(components)
-        self.init(date: thisDate, calendar: components.calendar, timeZone: components.timeZone)
+        self.init(date: thisDate, calendar: components.calendar)
     }
 
     /// Time interval since the reference date at 1 January 2001
