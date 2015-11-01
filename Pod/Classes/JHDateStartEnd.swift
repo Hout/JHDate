@@ -12,61 +12,6 @@ import Foundation
 
 public extension JHDate {
 
-    /// Takes a date unit and returns the next bigger date unit.
-    /// The returned value normally folows the sequence from hour to year to month etc.
-    /// When submitting a week oriented unit the next week oriented unit will be returned, or era for the yearForWekeOfYear.
-    ///
-    /// - Parameters:
-    ///     - unit: calendrical unit.
-    ///
-    /// - Returns: calendrical unit which is one step bigger in the calendrical unit system
-    ///
-    internal func biggerUnit(unit: NSCalendarUnit) -> NSCalendarUnit? {
-        switch unit {
-        case NSCalendarUnit.Era: return nil
-        case NSCalendarUnit.Year: return .Era
-        case NSCalendarUnit.Month: return .Year
-        case NSCalendarUnit.Day: return .Month
-        case NSCalendarUnit.Hour: return .Day
-        case NSCalendarUnit.Minute: return .Hour
-        case NSCalendarUnit.Second: return .Minute
-        case NSCalendarUnit.Nanosecond: return .Second
-        case NSCalendarUnit.YearForWeekOfYear: return .Era
-        case NSCalendarUnit.WeekOfYear: return .YearForWeekOfYear
-        case NSCalendarUnit.Weekday: return .WeekOfYear
-        default: return nil
-        }
-    }
-
-    /// Takes a date unit and returns a set of smaller date units.
-    /// The returned value normally follows the sequence from year to month to day to hour etc.
-    /// When submitting a week oriented unit the next week oriented unit will be returned, or hour for the weekday.
-    ///
-    /// - Parameters:
-    ///     - unit: calendrical unit.
-    ///
-    /// - Returns: set of calendrical units which is one step bigger in the calendrical unit system
-    ///
-    /// - note: Mind that the returned value is a Set as in Collection, not a RawOptionSet
-    ///
-    internal func smallerUnits(unit: NSCalendarUnit) -> [NSCalendarUnit]? {
-        switch unit {
-        case NSCalendarUnit.Era: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month, .Year]
-        case NSCalendarUnit.Year: return [.Nanosecond, .Second, .Minute, .Hour, .Day, .Month]
-        case NSCalendarUnit.Month: return [.Nanosecond, .Second, .Minute, .Hour, .Day]
-        case NSCalendarUnit.Day: return [.Nanosecond, .Second, .Minute, .Hour]
-        case NSCalendarUnit.Hour: return [.Nanosecond, .Second, .Minute]
-        case NSCalendarUnit.Minute: return [.Nanosecond, .Second]
-        case NSCalendarUnit.Second: return [.Nanosecond]
-        case NSCalendarUnit.Nanosecond: return []
-        case NSCalendarUnit.YearForWeekOfYear: return [.Nanosecond, .Second, .Minute, .Hour, .Weekday, .WeekOfYear]
-        case NSCalendarUnit.WeekOfYear: return [.Nanosecond, .Second, .Minute, .Hour, .Weekday]
-        case NSCalendarUnit.Weekday: return [.Nanosecond, .Second, .Minute, .Hour]
-        default:
-            return nil
-        }
-    }
-
     /// Takes a date unit and returns a date at the start of that unit.
     /// E.g. JHDate().startOf(.Year) would return last New Year at midnight.
     ///
@@ -78,40 +23,87 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public func startOf(unit: NSCalendarUnit) -> JHDate? {
-        let theseComponents = components
-
-        let YMDUnits: NSCalendarUnit = [.Year, .Month, .Day]
-        let YWDUnits: NSCalendarUnit = [.YearForWeekOfYear, .WeekOfYear, .Weekday]
-
-        // Remove components that involve cause data that could upset dateFromComponents
-        if YMDUnits.contains(unit) {
-            theseComponents.yearForWeekOfYear = NSDateComponentUndefined
-            theseComponents.weekOfYear = NSDateComponentUndefined
-            theseComponents.weekOfMonth = NSDateComponentUndefined
-            theseComponents.weekday = NSDateComponentUndefined
-            theseComponents.weekdayOrdinal = NSDateComponentUndefined
-            theseComponents.quarter = NSDateComponentUndefined
-        }
-
-        if YWDUnits.contains(unit) {
-            theseComponents.year = NSDateComponentUndefined
-            theseComponents.month = NSDateComponentUndefined
-            theseComponents.day = NSDateComponentUndefined
-            theseComponents.quarter = NSDateComponentUndefined
-        }
-
-        for thisUnit in smallerUnits(unit)! {
-            let nextBiggerUnit = biggerUnit(thisUnit)!
-            let range = calendar.rangeOfUnit(thisUnit, inUnit: nextBiggerUnit, forDate: self.date)
-            let minimum = range.location
-            theseComponents.setValue(minimum, forComponent:thisUnit)
-        }
-
-        let newDate = calendar.dateFromComponents(theseComponents)
-        guard newDate != nil else {
+        let components = self.components
+        switch unit {
+        case NSCalendarUnit.Era:
+            components.year = 1
+            components.month = 1
+            components.day = 1
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Year:
+            components.month = 1
+            components.day = 1
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Month:
+            components.day = 1
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Day, NSCalendarUnit.Weekday:
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Hour:
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Minute:
+            components.second = 0
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.Second:
+            components.nanosecond = 0
+            components.yearForWeekOfYear = NSDateComponentUndefined
+            components.weekOfYear = NSDateComponentUndefined
+            components.weekday = NSDateComponentUndefined
+        case NSCalendarUnit.YearForWeekOfYear:
+            components.weekOfYear = 1
+            components.weekday = calendar.firstWeekday
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.year = NSDateComponentUndefined
+            components.month = NSDateComponentUndefined
+            components.day = NSDateComponentUndefined
+        case NSCalendarUnit.WeekOfYear:
+            components.weekday = calendar.firstWeekday
+            components.hour = 0
+            components.minute = 0
+            components.second = 0
+            components.nanosecond = 0
+            components.year = NSDateComponentUndefined
+            components.month = NSDateComponentUndefined
+            components.day = NSDateComponentUndefined
+        default:
             return nil
         }
-        return JHDate(date: newDate!, calendar: self.calendar, timeZone: self.timeZone)
+        return JHDate(components: components)
     }
 
     /// Takes a date unit and returns a date at the end of that unit.

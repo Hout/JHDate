@@ -477,8 +477,62 @@ class JHDateSpec: QuickSpec {
 
         context("start of unit") {
 
-            it("should return start of day for time during day") {
-                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+            var date: JHDate!
+            beforeEach {
+                date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17, locale: NSLocale(localeIdentifier: "nl_NL"))!
+            }
+            it("should return nil for nanosecond") {
+                let testDate = date.startOf(.Nanosecond)
+                expect(testDate).to(beNil())
+            }
+            
+            it("should return nil for quarter") {
+                let testDate = date.startOf(.Quarter)
+                expect(testDate).to(beNil())
+            }
+
+            it("should return nil for week of month") {
+                let testDate = date.startOf(.WeekOfMonth)
+                expect(testDate).to(beNil())
+            }
+
+            it("should return start of second") {
+                let testDate = date.startOf(.Second)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 14
+                expect(testDate.minute) == 15
+                expect(testDate.second) == 16
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of minute") {
+                let testDate = date.startOf(.Minute)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 14
+                expect(testDate.minute) == 15
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of hour") {
+                let testDate = date.startOf(.Hour)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 14
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of day") {
                 let testDate = date.startOf(.Day)!
 
                 expect(testDate.year) == 1999
@@ -489,9 +543,9 @@ class JHDateSpec: QuickSpec {
                 expect(testDate.second) == 0
                 expect(testDate.nanosecond) == 0
             }
-
+            
             it("should return start of day for midnight") {
-                let date = JHDate(year: 1999, month: 12, day: 31, hour: 0, minute: 0, second: 0, nanosecond: 0)!
+                date = date.startOf(.Day)
                 let testDate = date.startOf(.Day)!
 
                 expect(testDate.year) == 1999
@@ -503,8 +557,56 @@ class JHDateSpec: QuickSpec {
                 expect(testDate.nanosecond) == 0
             }
 
+            it("should return start of week in Europe") {
+                let testDate = date.startOf(.WeekOfYear)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 27
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of year for week in Europe") {
+                let testDate = date.startOf(.YearForWeekOfYear)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 1
+                expect(testDate.day) == 4
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of weekday") {
+                let testDate = date.startOf(.Weekday)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 31
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
+            it("should return start of week in USA") {
+                date.locale = NSLocale(localeIdentifier: "en_US")
+                let testDate = date.startOf(.WeekOfYear)!
+
+                expect(testDate.year) == 1999
+                expect(testDate.month) == 12
+                expect(testDate.day) == 26
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
             it("should return start of month") {
-                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                 let testDate = date.startOf(.Month)!
 
                 expect(testDate.year) == 1999
@@ -515,9 +617,8 @@ class JHDateSpec: QuickSpec {
                 expect(testDate.second) == 0
                 expect(testDate.nanosecond) == 0
             }
-
+            
             it("should return start of year") {
-                let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                 let testDate = date.startOf(.Year)!
 
                 expect(testDate.year) == 1999
@@ -528,7 +629,19 @@ class JHDateSpec: QuickSpec {
                 expect(testDate.second) == 0
                 expect(testDate.nanosecond) == 0
             }
+            
+            it("should return start of era") {
+                let testDate = date.startOf(.Era)!
 
+                expect(testDate.year) == 1
+                expect(testDate.month) == 1
+                expect(testDate.day) == 1
+                expect(testDate.hour) == 0
+                expect(testDate.minute) == 0
+                expect(testDate.second) == 0
+                expect(testDate.nanosecond) == 0
+            }
+            
         }
 
         context("end of unit") {
