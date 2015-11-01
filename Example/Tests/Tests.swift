@@ -108,7 +108,7 @@ class JHDateSpec: QuickSpec {
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
-                    expect(date.day) == 6
+                    expect(date.day) == 13
                     expect(date.hour) == 0
                     expect(date.minute) == 0
                     expect(date.second) == 0
@@ -416,7 +416,33 @@ class JHDateSpec: QuickSpec {
                     expect(testDate.second) == 0
                     expect(testDate.nanosecond) == 0
                 }
+                
+                it("should return start of week") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                    let testDate = date.startOf(.WeekOfYear)!
 
+                    expect(testDate.year) == 1999
+                    expect(testDate.month) == 12
+                    expect(testDate.day) == 1
+                    expect(testDate.hour) == 0
+                    expect(testDate.minute) == 0
+                    expect(testDate.second) == 0
+                    expect(testDate.nanosecond) == 0
+                }
+                
+                it("should return start of quarter") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                    let testDate = date.startOf(.Quarter)!
+
+                    expect(testDate.year) == 1999
+                    expect(testDate.month) == 10
+                    expect(testDate.day) == 1
+                    expect(testDate.hour) == 0
+                    expect(testDate.minute) == 0
+                    expect(testDate.second) == 0
+                    expect(testDate.nanosecond) == 0
+                }
+                
                 it("should return start of year") {
                     let date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                     let testDate = date.startOf(.Year)!
@@ -446,10 +472,22 @@ class JHDateSpec: QuickSpec {
                     expect(testDate.second) == 59
                 }
                 
+                it("should return end of week") {
+                    let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                    let testDate = date.endOf(.WeekOfYear)!
+
+                    expect(testDate.year) == 1999
+                    expect(testDate.month) == 1
+                    expect(testDate.day) == 9
+                    expect(testDate.hour) == 23
+                    expect(testDate.minute) == 59
+                    expect(testDate.second) == 59
+                }
+
                 it("should return end of month") {
                     let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                     let testDate = date.endOf(.Month)!
-                    
+
                     expect(testDate.year) == 1999
                     expect(testDate.month) == 1
                     expect(testDate.day) == 31
@@ -457,7 +495,19 @@ class JHDateSpec: QuickSpec {
                     expect(testDate.minute) == 59
                     expect(testDate.second) == 59
                 }
-                
+
+                it("should return end of quarter") {
+                    let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
+                    let testDate = date.endOf(.Quarter)!
+
+                    expect(testDate.year) == 1999
+                    expect(testDate.month) == 3
+                    expect(testDate.day) == 31
+                    expect(testDate.hour) == 23
+                    expect(testDate.minute) == 59
+                    expect(testDate.second) == 59
+                }
+
                 it("should return end of year") {
                     let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                     let testDate = date.endOf(.Year)!
