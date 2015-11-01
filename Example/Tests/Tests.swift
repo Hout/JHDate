@@ -111,6 +111,7 @@ class JHDateSpec: QuickSpec {
 
                 it("should return a midnight date with nil YWD initialisation") {
                     let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4)!
+                    date.locale = NSLocale(localeIdentifier: "nl_NL")
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
@@ -548,7 +549,7 @@ class JHDateSpec: QuickSpec {
             it("should return end of year") {
                 let date = JHDate(year: 1999, month: 1, day: 1, hour: 14, minute: 15, second: 16, nanosecond: 17)!
                 let testDate = date.endOf(.Year)!
-                
+
                 expect(testDate.year) == 1999
                 expect(testDate.month) == 12
                 expect(testDate.day) == 31
