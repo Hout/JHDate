@@ -331,7 +331,7 @@ class JHDateSpec: QuickSpec {
 
                 var date: JHDate!
                 beforeEach {
-                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
+                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(forSecondsFromGMT: 3600), locale: NSLocale(localeIdentifier: "nl_NL"))!
                 }
 
                 it("should initiate default date formatter") {

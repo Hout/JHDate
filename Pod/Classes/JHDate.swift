@@ -161,6 +161,7 @@ public class JHDate : NSObject {
                 components.yearForWeekOfYear = NSDateComponentUndefined
                 components.weekOfYear = NSDateComponentUndefined
                 components.weekday = NSDateComponentUndefined
+                components.weekOfMonth = NSDateComponentUndefined
             }
 
             self.init(components: components, locale: locale)
