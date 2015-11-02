@@ -10,11 +10,11 @@ import Foundation
 
 // MARK: - CustomStringConvertable delegate
 
-extension JHDate : CustomStringConvertible {
+extension JHDate {
 
     /// Returns a full description of the class
     ///
-    public var description: String {
+    override public var description: String {
         var descriptor: [String] = []
 
         let dateFormatter = NSDateFormatter()
@@ -23,9 +23,9 @@ extension JHDate : CustomStringConvertible {
         dateFormatter.timeZone = timeZone
         descriptor.append("Date \(dateFormatter.stringFromDate(self.date))")
 
-        descriptor.append("Calendar: \(calendar)")
-        descriptor.append("Time zone: \(timeZone)")
-        descriptor.append("Locale: \(locale)")
+//        descriptor.append("Calendar: \(calendar)")
+//        descriptor.append("Time zone: \(timeZone)")
+//        descriptor.append("Locale: \(locale)")
 
         return descriptor.joinWithSeparator("\n")
     }
