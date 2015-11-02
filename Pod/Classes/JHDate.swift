@@ -47,6 +47,8 @@ public class JHDate : NSObject {
     public var calendar: NSCalendar {
         didSet {
             formatter.calendar = calendar
+            calendar.timeZone = timeZone
+            calendar.locale = locale
         }
     }
 
@@ -55,12 +57,9 @@ public class JHDate : NSObject {
     /// You can alter the time zone to adjust the representation of date to your needs.
     ///
     public var timeZone: NSTimeZone {
-        get {
-            return calendar.timeZone
-        }
-        set {
-            calendar.timeZone = newValue
-            formatter.timeZone = newValue
+        didSet {
+            calendar.timeZone = timeZone
+            formatter.timeZone = timeZone
         }
     }
 
@@ -68,13 +67,10 @@ public class JHDate : NSObject {
     /// Because the locale is part of calendar, this is a shortcut to that variable.
     /// You can alter the locale to adjust the representation of date to your needs.
     ///
-    public var locale: NSLocale? {
-        get {
-            return calendar.locale
-        }
-        set {
-            calendar.locale = newValue
-            formatter.locale = newValue
+    public var locale: NSLocale {
+        didSet {
+            calendar.locale = locale
+            formatter.locale = locale
         }
     }
 
@@ -100,18 +96,15 @@ public class JHDate : NSObject {
         formatter aFormatter: NSDateFormatter? = nil) {
             date = aDate!
             calendar = aCalendar ?? NSCalendar.currentCalendar()
+            timeZone = aTimeZone ?? NSTimeZone.defaultTimeZone()
+            locale = aLocale ?? (aCalendar?.locale ?? NSLocale.currentLocale())
             formatter = aFormatter ?? NSDateFormatter()
 
             super.init()
 
-            if let thisTimeZone = aTimeZone {
-                timeZone = thisTimeZone
-            }
-            if let thisLocale = aLocale {
-                locale = thisLocale
-            } else if calendar.locale == nil {
-                calendar.locale = NSLocale.currentLocale()
-            }
+            // Assign calendar fields
+            calendar.timeZone = timeZone
+            calendar.locale = locale
 
             // Assign formatter fields
             formatter.calendar = calendar
@@ -166,9 +159,8 @@ public class JHDate : NSObject {
             components.nanosecond = nanosecond ?? defaultComponents.nanosecond
             components.timeZone = timeZone ?? defaultComponents.timeZone
             components.calendar = calendar ?? defaultComponents.calendar
-            if let thisLocale = aLocale { components.calendar?.locale = thisLocale }
 
-            self.init(components: components)
+            self.init(components: components, locale: aLocale)
     }
 
     /// Initialise with week number date components
@@ -186,26 +178,23 @@ public class JHDate : NSObject {
         minute: Int? = nil,
         second: Int? = nil,
         nanosecond: Int? = nil,
-        timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
+        timeZone aTimeZone: NSTimeZone? = nil,
+        calendar aCalendar: NSCalendar? = nil,
         locale aLocale: NSLocale? = nil) {
 
             let defaultComponents = JHDate.defaultComponents()
 
-            let components = NSDateComponents()
-            components.era = era ?? defaultComponents.era
-            components.yearForWeekOfYear = yearForWeekOfYear
-            components.weekOfYear = weekOfYear
-            components.weekday = weekday
-            components.hour = hour ?? defaultComponents.hour
-            components.minute = minute ?? defaultComponents.minute
-            components.second = second ?? defaultComponents.second
-            components.nanosecond = nanosecond ?? defaultComponents.nanosecond
-            components.timeZone = timeZone ?? defaultComponents.timeZone
-            components.calendar = calendar ?? defaultComponents.calendar
-            if let thisLocale = aLocale { components.calendar?.locale = thisLocale }
+            let theComponents = NSDateComponents()
+            theComponents.era = era ?? defaultComponents.era
+            theComponents.yearForWeekOfYear = yearForWeekOfYear
+            theComponents.weekOfYear = weekOfYear
+            theComponents.weekday = weekday
+            theComponents.hour = hour ?? defaultComponents.hour
+            theComponents.minute = minute ?? defaultComponents.minute
+            theComponents.second = second ?? defaultComponents.second
+            theComponents.nanosecond = nanosecond ?? defaultComponents.nanosecond
 
-            self.init(components: components)
+            self.init(components: theComponents, calendar: aCalendar, timeZone: aTimeZone, locale: aLocale)
     }
 
 
@@ -220,25 +209,24 @@ public class JHDate : NSObject {
     ///
     /// - SeeAlso: [dateFromComponents](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDateComponents_Class/)
     ///
-    public convenience init?(components: NSDateComponents) {
+    public convenience init?(
+        components: NSDateComponents,
+        timeZone aTimeZone: NSTimeZone? = nil,
+        calendar aCalendar: NSCalendar? = nil,
+        locale aLocale: NSLocale? = nil) {
 
-        let defaultComponents = JHDate.defaultComponents()
+            let defaultComponents = JHDate.defaultComponents()
 
-        if components.calendar == nil {
-            components.calendar = defaultComponents.calendar
-        }
-        if components.timeZone == nil {
-            components.timeZone = NSTimeZone.defaultTimeZone()
-            components.calendar!.timeZone = NSTimeZone.defaultTimeZone()
-        }
+            // One of the year components must be defined to init successful
+            if components.year == NSDateComponentUndefined && components.yearForWeekOfYear == NSDateComponentUndefined {
+                components.year = defaultComponents.year
+            }
 
-        // One of the year components must be defined to init successful
-        if components.year == NSDateComponentUndefined && components.yearForWeekOfYear == NSDateComponentUndefined {
-            components.year = defaultComponents.year
-        }
+            components.calendar = aCalendar ?? components.calendar ?? defaultComponents.calendar
+            components.timeZone = aTimeZone ?? components.timeZone ?? defaultComponents.timeZone
 
-        let thisDate = components.calendar!.dateFromComponents(components)
-        self.init(date: thisDate, calendar: components.calendar)
+            let thisDate = components.calendar!.dateFromComponents(components)
+            self.init(date: thisDate, calendar: components.calendar, timeZone: components.timeZone, locale: aLocale)
     }
 
     // NSCoding initialiser
@@ -247,6 +235,8 @@ public class JHDate : NSObject {
         date = aDecoder.decodeObjectOfClass(NSDate.self, forKey: "date")!
         calendar = aDecoder.decodeObjectOfClass(NSCalendar.self, forKey: "calendar")!
         formatter = aDecoder.decodeObjectOfClass(NSDateFormatter.self, forKey: "formatter")!
+        timeZone = aDecoder.decodeObjectOfClass(NSTimeZone.self, forKey: "timeZone")!
+        locale = aDecoder.decodeObjectOfClass(NSLocale.self, forKey: "locale")!
     }
 
     
@@ -256,6 +246,8 @@ public class JHDate : NSObject {
         aCoder.encodeObject(date, forKey: "date")
         aCoder.encodeObject(calendar, forKey: "calendar")
         aCoder.encodeObject(formatter, forKey: "formatter")
+        aCoder.encodeObject(timeZone, forKey: "timeZone")
+        aCoder.encodeObject(locale, forKey: "locale")
     }
 
     

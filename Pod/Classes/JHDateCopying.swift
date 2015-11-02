@@ -10,7 +10,8 @@
 extension JHDate : NSCopying {
 
     @objc public func copyWithZone(zone: NSZone) -> AnyObject {
-        let newObject = JHDate(date: self.date, calendar: self.calendar)
+        let newObject = JHDate(date: self.date)
+        newObject.calendar = self.calendar.copy() as! NSCalendar
         return newObject
     }
 

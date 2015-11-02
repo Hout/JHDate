@@ -102,6 +102,19 @@ public extension JHDate {
         return calendar.isDate(self.date, inSameDayAsDate: date)
     }
 
+    /// Returns whether the given date is equal to the receiver.
+    ///
+    /// - Parameters:
+    ///     - date: a date to compare against
+    ///
+    /// - Returns: a boolean indicating whether the receiver is equal to the given date
+    ///
+    /// - seealso: [isEqualToDate:](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSDate_Class/index.html#//apple_ref/occ/instm/NSDate/isEqualToDate:)
+    ///
+    public func isEqualToDate(compareDate: JHDate) -> Bool {
+        return date.isEqualToDate(compareDate.date)
+    }
+    
     /// Returns true when the given date is equal to the receiver.
     /// Just the dates are compared. Calendars, time zones are irrelevant.
     ///
@@ -114,10 +127,56 @@ public extension JHDate {
     ///     we need to resolve this [differently](http://mgrebenets.github.io/swift/2015/06/21/equatable-nsobject-with-swift-2/).
     ///
     override public func isEqual(object: AnyObject?) -> Bool {
-        if let rhs = object as? JHDate {
-            return date.isEqualToDate(rhs.date)
+
+        // First check if they are not the same objects
+        if super.isEqual(object) {
+            return true
         }
-        return false
+
+        guard object != nil else {
+            return false
+        }
+        let notNilObject = object!
+
+        guard notNilObject.isKindOfClass(JHDate) else {
+            return false
+        }
+        let compareDate = notNilObject as! JHDate
+
+        // Then compare the content, first the date
+        guard date.isEqualToDate(compareDate.date) else {
+            return false
+        }
+
+        // Then the calendar
+        guard calendar.calendarIdentifier == compareDate.calendar.calendarIdentifier else {
+            return false
+        }
+
+        // Then the time zone
+        guard timeZone.secondsFromGMTForDate(date) == compareDate.timeZone.secondsFromGMTForDate(compareDate.date) else {
+            return false
+        }
+
+        // Then the locale
+        guard locale.localeIdentifier == compareDate.locale.localeIdentifier else {
+            return false
+        }
+
+        // But not the formatter... but its main values
+        let compareFormatter = compareDate.formatter
+        guard formatter.dateFormat == compareFormatter.dateFormat else {
+            return false
+        }
+        guard formatter.dateStyle == compareFormatter.dateStyle else {
+            return false
+        }
+        guard formatter.timeStyle == compareFormatter.timeStyle else {
+            return false
+        }
+
+        // We have made it! They are equal!
+        return true
     }
 }
 

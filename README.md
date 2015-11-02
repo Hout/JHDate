@@ -196,13 +196,22 @@ Decision | Rationale
 ------------- | -------------
 Do not include an initialiser from string  | That is too complicated with all the different ways of notation in the world. It would have too little benefit next to the currently available convenience intialisers instead.
 Do not attempt to mimic all properties and functions of the NSDateFormatter, NSDateComponents etc. E.g. NSDateFormatter's ``localizedStringFromDate`` or ``weekdaySymbols`` | Sometimes it is just easier to use the ``date`` property from ``JHDate`` instead.
-
+Equation ``==`` is on date values only | Hmmm, not sure about this one. Created an issue.
 
 ## Author
 
 Jeroen Houtzager, pls contact me through GitHub
 
-## 
+## Collaboration
+
+if you would like to contribute:
+
+- Fork
+- Send pull requests
+- Submit issues
+- Challenge the design decisions
+- Challenge coding
+- Challenge anything!
 
 These libs & authors inspired me to this code:
 

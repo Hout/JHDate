@@ -115,7 +115,7 @@ class JHDateSpec: QuickSpec {
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
-                    expect(date.day) == 13
+                    expect(date.day) == 6
                     expect(date.hour) == 0
                     expect(date.minute) == 0
                     expect(date.second) == 0
@@ -197,6 +197,7 @@ class JHDateSpec: QuickSpec {
                     expect(date.month) == 12
                     expect(date.day) == 31
                 }
+
                 it("should return proper normal HMSN properties") {
                     let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000)!
                     expect(date.year) == 1999
@@ -208,6 +209,7 @@ class JHDateSpec: QuickSpec {
                     expect(date.nanosecond) > 400000000
                     expect(date.nanosecond) < 600000000
                 }
+
                 it("should return proper leap month") {
                     for year in 1500...2500 {
                         let date = JHDate(year: year, month: 2, day: 1)!
@@ -222,6 +224,42 @@ class JHDateSpec: QuickSpec {
                             expect(date.leapMonth).to(beFalse(), description: "year \(year) is NOT divisable by 4 and is NOT leap")
                         }
                     }
+                }
+
+                it("should synchronise all calendar assignments") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    expect(date.formatter.calendar) == date.calendar
+
+                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+                    expect(date.formatter.calendar) == date.calendar
+                }
+
+                it("should synchronise all locale assignments") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    expect(date.formatter.locale) == date.locale
+                    expect(date.calendar.locale) == date.locale
+
+                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+                    expect(date.formatter.locale) == date.locale
+                    expect(date.calendar.locale) == date.locale
+
+                    date.locale = NSLocale(localeIdentifier: "af_ZA")
+                    expect(date.formatter.locale) == date.locale
+                    expect(date.calendar.locale) == date.locale
+                }
+
+                it("should synchronise all time zone assignments") {
+                    let date = JHDate(year: 1999, month: 12, day: 31)!
+                    expect(date.formatter.timeZone) == date.timeZone
+                    expect(date.calendar.timeZone) == date.timeZone
+
+                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
+                    expect(date.formatter.timeZone) == date.timeZone
+                    expect(date.calendar.timeZone) == date.timeZone
+
+                    date.timeZone = NSTimeZone(forSecondsFromGMT: 36000)
+                    expect(date.formatter.timeZone) == date.timeZone
+                    expect(date.calendar.timeZone) == date.timeZone
                 }
             }
 
@@ -333,13 +371,59 @@ class JHDateSpec: QuickSpec {
 
         context("comparisons") {
 
+            it("should return true for equating a different object with the same properties") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = date1.copy() as! JHDate
+
+                expect(date1 == date2) == true
+            }
+            
+            it("should return true for equating the same object") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = date1
+
+                expect(date1 == date2) == true
+            }
+            
+            it("should return false for equating objects with different dates") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                let date2 = JHDate(year: 1999, month: 12, day: 30)!
+
+                expect(date1 == date2) == false
+            }
+            
+            it("should return false for equating objects with different calendars") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian))!
+                let date2 = date1.copy() as! JHDate
+                date2.calendar = NSCalendar(identifier: NSCalendarIdentifierChinese)!
+
+                expect(date1 == date2) == false
+            }
+            
+            it("should return false for equating objects with different locales") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31, locale: NSLocale(localeIdentifier: "en_UK"))!
+                let date2 = date1.copy() as! JHDate
+                date2.locale = NSLocale(localeIdentifier: "en_US")
+
+                expect(date1 == date2) == false
+            }
+            
+            it("should return false for equating objects with different formatters") {
+                let date1 = JHDate(year: 1999, month: 12, day: 31)!
+                date1.dateStyle = .LongStyle
+                let date2 = date1.copy() as! JHDate
+                date2.dateStyle = .MediumStyle
+
+                expect(date1 == date2) == false
+            }
+            
             it("should return true for greater than comparing") {
                 let date1 = JHDate(year: 1999, month: 12, day: 31)!
                 let date2 = JHDate(year: 1999, month: 12, day: 30)!
 
                 expect(date1 > date2) == true
             }
-
+            
             it("should return false for greater than comparing") {
                 let date2 = JHDate(year: 1999, month: 12, day: 30)
 
@@ -431,7 +515,7 @@ class JHDateSpec: QuickSpec {
                 let testDate = date + 1.days
                 let expectedDate = JHDate(year: 2000, month: 1, day: 1)
 
-                expect(testDate == expectedDate).to(beTrue())
+                expect(testDate) == expectedDate
             }
 
             it("should add properly") {
