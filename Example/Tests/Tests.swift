@@ -74,6 +74,46 @@ class JHDateSpec: QuickSpec {
                 }
             }
 
+            context("NSDate ports") {
+
+                it("should return a zero time interval for 1-Jan-2001 00:00:00.000 UTC") {
+                    let refDate = NSDate(timeIntervalSinceReferenceDate: 0)
+                    let date = JHDate(date: refDate, timeZone: NSTimeZone(forSecondsFromGMT: 0))
+
+                    expect(date.timeIntervalSinceReferenceDate) == 0
+                }
+                
+                it("should return a 3600 time interval for 1-Jan-2001 00:00:00.000 CET") {
+                    let refDate = NSDate(timeIntervalSinceReferenceDate: 0)
+                    let date = JHDate(date: refDate, timeZone: NSTimeZone(abbreviation: "CET"))
+
+                    expect(date.timeIntervalSinceReferenceDate) == 3600
+                }
+
+                it("should report the maximum date") {
+                    let testDate = JHDate(year: 5, month: 2, day: 3)!
+                    let maxDate = JHDate.latestDate(
+                        JHDate(year: 1, month: 2, day: 3)!,
+                        JHDate(year: 2, month: 2, day: 3)!,
+                        JHDate(year: 3, month: 2, day: 3)!,
+                        testDate,
+                        JHDate(year: 4, month: 2, day: 3)!)
+                    expect(maxDate) == testDate
+                }
+
+                it("should report the minimum date") {
+                    let testDate = JHDate(year: 100, month: 2, day: 3)!
+                    let minDate = JHDate.earliestDate(
+                        JHDate(year: 101, month: 2, day: 3)!,
+                        JHDate(year: 102, month: 2, day: 3)!,
+                        JHDate(year: 103, month: 2, day: 3)!,
+                        testDate,
+                        JHDate(year: 104, month: 2, day: 3)!)
+                    expect(minDate) == testDate
+                }
+
+            }
+
             context("component initialisation") {
 
                 it("should return a midnight date with nil YMD initialisation with UTC time zone") {

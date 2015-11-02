@@ -28,7 +28,7 @@ let determinedDate = JHDate(year: 2011, month: 2, day: 11)!
 
 //: Create a determined date in a different time zone
 let usaTimeZone = NSTimeZone(abbreviation: "EST")!
-let usaDate = JHDate(year: 2011, month: 2, day: 11, hour: 14, timeZone: usaTimeZone)!
+var usaDate = JHDate(year: 2011, month: 2, day: 11, hour: 14, timeZone: usaTimeZone)!
 
 //: Mind that default values for JHDate(year etc) are taken from the reference date,
 //: which is 1 January 2001, 00:00:00.000 in your default time zone and against your current calendar.
@@ -61,6 +61,11 @@ let newDate = oneWeekLater.withValue(14, forUnit: .Hour)!
 //: ... or with a combination of components
 let newDate2 = oneWeekLater.withValues([(13, .Hour), (12, .Minute)])!
 
+//: #### NSDate
+newDate.timeIntervalSinceReferenceDate
+JHDate.earliestDate(newDate, newDate2, today, something)
+JHDate.latestDate(newDate, newDate2, today, something)
+
 //: #### Components
 newDate2.year
 newDate2.month
@@ -89,15 +94,17 @@ let endOfYear = newDate.endOf(.Year)
 
 //: #### Conversions
 //: Change time zone
-newDate2.timeZone = usaTimeZone
+let usaDate2 = JHDate(refDate: newDate2, timeZone: usaTimeZone)
 
 //: Change and time zone calendar to Islamic in Dubai
-newDate2.calendar = NSCalendar(identifier: NSCalendarIdentifierIslamicCivil)!
-newDate2.timeZone = NSTimeZone(abbreviation: "GST")!
+let dubaiTimeZone = NSTimeZone(abbreviation: "GST")!
+let dubaiCalendar = NSCalendar(identifier: NSCalendarIdentifierIslamicCivil)!
+let dubaiDate = JHDate(refDate: newDate2, calendar: dubaiCalendar, timeZone: dubaiTimeZone)
 
 //: Again, but now we go to New Delhi
-newDate2.calendar = NSCalendar(identifier: NSCalendarIdentifierIndian)!
-newDate2.timeZone = NSTimeZone(abbreviation: "IST")!
+let indiaTimeZone = NSTimeZone(abbreviation: "IST")!
+let indiaCalendar = NSCalendar(identifier: NSCalendarIdentifierIndian)!
+let indiaDate = JHDate(refDate: newDate2, calendar: dubaiCalendar, timeZone: dubaiTimeZone)
 
 //: #### Equations
 //: JHDate conforms to the Equatable protocol. I.e. you can compare with == for equality.
@@ -105,14 +112,14 @@ newDate == newDate2
 newDate == newDate
 
 //: For equal date values, you should use x.isEqualToDate(y)
-newDate.dateStyle = .LongStyle
-let newDate3 = newDate.copy() as! JHDate
+let newDate3 = JHDate(refDate: newDate2)!
 newDate == newDate3
-newDate3.locale = NSLocale(localeIdentifier: "en_NZ")
-newDate == newDate3
+let newDate4  = JHDate(refDate: newDate2, locale: NSLocale(localeIdentifier: "en_NZ"))!
+newDate4 == newDate3
 newDate.isEqualToDate(newDate3)
-newDate.toString()
+newDate2.toString()
 newDate3.toString()
+newDate4.toString()
 
 //: #### Comparisons
 //: JHDate conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
@@ -133,39 +140,31 @@ let date2 = (date1 + 1.hours)!
 date1 > date2
 date1 < date2
 
-date2.timeZone = NSTimeZone(abbreviation: "CST")!
+let indiaDate1 = JHDate(refDate: date1, calendar: indiaCalendar, timeZone: indiaTimeZone)!
 
+//: indiaDate1 = 19:30 IST
 //: date1 = 14:00 UTC
 //: date2 = 9:00 CST
-date1 > date2
-date1 < date2
+indiaDate1 > date2
+indiaDate1 < date2
+
+indiaDate1.isEqualToDate(date1)
 
 //: QED: same outcome!
 
 //: #### Display
 //: JHDate conforms to the ConvertString protocol
-print(date2.description)
+date2.description
 
 //: Various NSDateFormatter properties are ported
 let date3 = (date1 + 7.hours)!
-date3.timeZone = NSTimeZone(abbreviation: "UTC")!
-date3.dateStyle = .ShortStyle
 date3.toString()
-date3.dateStyle = .MediumStyle
-date3.toString()
-date3.dateStyle = .LongStyle
-date3.toString()
-date3.dateStyle = .NoStyle
-date3.toString()
-date3.timeStyle = .ShortStyle
-date3.toString()
-date3.timeStyle = .MediumStyle
-date3.toString()
-date3.timeStyle = .LongStyle
-date3.toString()
-date3.timeStyle = .NoStyle
-date3.toString()
-date3.dateFormat = "dd-MMM-yyyy HH:mm"
-date3.toString()
+date3.toString(.LongStyle)
+date3.toString(dateStyle: .LongStyle)
+date3.toString(timeStyle: .LongStyle)
+date3.toString("dd-MMM-yyyy HH:mm")
+(JHDate() + 1.days)!.toRelativeString()
+
+
 
 

@@ -94,12 +94,17 @@ public class JHDate : NSObject {
         self.init(date: copyDate.date, calendar: copyDate.calendar, timeZone: copyDate.timeZone, locale: copyDate.locale)
     }
 
-    /// Initialise with a date, a calendar and/or a time zone
+    /// Initialise with a date, a calendar and/or a time zone. This initialiser can be used to copy a date while 
+    /// setting certain properties.
     ///
     /// - Parameters:
     ///     - date:       the date to assign, default = NSDate() (that is the current time)
     ///     - calendar:   the calendar to work with to assign, default = the current calendar
     ///     - timeZone:   the time zone to work with, default is the default time zone
+    ///     - locale:     the locale to work with, default is the current locale
+    ///
+    /// Date and time property parameters can be used to alter the reference date properies in the context
+    /// of the calendar, locale and time zone
     ///
     public convenience init?(refDate: JHDate,
         era: Int? = nil,
@@ -167,6 +172,7 @@ public class JHDate : NSObject {
     /// - Parameters:
     ///     - components: date components according to which the date will be set.
     ///         Default values are these of the reference date.
+    ///     - locale:     the locale to work with, default is the current locale
     ///
     /// - Returns: a new instance of JHDate. If a date cannot be constructed from
     ///         the components, a nil value will be returned.
@@ -187,10 +193,14 @@ public class JHDate : NSObject {
     
 
     /// Initialise with year month day date components
-    ///
-    /// Parameters are interpreted based on the context of the calendar.
-    /// year, month and day are compulsory. The other parameters can be left out
+    /// Parameters are interpreted based on the context of the calendar, time zone and locale.
+    /// The ``day`` parameter is compulsory. The other parameters can be left out
     /// and will default to their values for the reference date.
+    ///
+    /// - Parameters:
+    ///     - calendar:   the calendar to work with to assign, default = the current calendar
+    ///     - timeZone:   the time zone to work with, default is the default time zone
+    ///     - locale:     the locale to work with, default is the current locale
     ///
     public convenience init?(
         era: Int? = nil,
@@ -223,11 +233,15 @@ public class JHDate : NSObject {
     }
     
     
-    /// Initialise with yearForWeekOfYear week weekday date components
-    ///
-    /// Parameters are interpreted based on the context of the calendar.
-    /// year, month and day are compulsory. The other parameters can be left out
+    /// Initialise with year-for-week-of-year, week-of-year and weekday date components
+    /// Parameters are interpreted based on the context of the calendar, time zone and locale.
+    /// The ``weekday`` parameter is compulsory. The other parameters can be left out
     /// and will default to their values for the reference date.
+    ///
+    /// - Parameters:
+    ///     - calendar:   the calendar to work with to assign, default = the current calendar
+    ///     - timeZone:   the time zone to work with, default is the default time zone
+    ///     - locale:     the locale to work with, default is the current locale
     ///
     public convenience init?(
         era: Int? = nil,
@@ -259,9 +273,11 @@ public class JHDate : NSObject {
             self.init(components: components, locale: aLocale)
     }
     
-    
-    // NSCoding initialiser
-    //
+
+    // MARK: - NSCoding protocol 
+
+    /// NSCoding initialiser for archiving and unarchiving
+    ///
     public required init?(coder aDecoder: NSCoder) {
         date = aDecoder.decodeObjectOfClass(NSDate.self, forKey: "date")!
         calendar = aDecoder.decodeObjectOfClass(NSCalendar.self, forKey: "calendar")!
@@ -279,6 +295,7 @@ public class JHDate : NSObject {
         aCoder.encodeObject(locale, forKey: "locale")
     }
 
+    // MARK: - helper funcs
 
     /// Create a default date components to use internally with the init with date components
     ///
@@ -295,27 +312,6 @@ public class JHDate : NSObject {
         return theseComponents
     }
 
-
-    /// Time interval since the reference date at 1 January 2001
-    ///
-    /// - Returns: the number of seconds as an NSTimeInterval.
-    ///
-    /// - SeeAlso: [timeIntervalSinceReferenceDate](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDate_Class/#//apple_ref/occ/instp/NSDate/timeIntervalSinceReferenceDate)
-    ///
-    public var timeIntervalSinceReferenceDate: NSTimeInterval {
-
-        // Reference date = midnight at 1 January 2001 in the local time zone
-        let theseComponents = NSDateComponents()
-        theseComponents.year = 2001
-        theseComponents.month = 1
-        theseComponents.day = 1
-        theseComponents.calendar = calendar
-        theseComponents.timeZone = timeZone
-
-        let referenceDate = calendar.dateFromComponents(theseComponents)!
-
-        return date.timeIntervalSinceReferenceDate - referenceDate.timeIntervalSinceReferenceDate
-    }
 
 }
 
