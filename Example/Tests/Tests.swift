@@ -683,7 +683,28 @@ class JHDateSpec: QuickSpec {
                 expect(ObjectIdentifier(a)) != ObjectIdentifier(b)
             }
         }
-    }
+
+        context("NSCoding") {
+            it("should code and decode in a proper way") {
+
+                let path = NSTemporaryDirectory() as NSString
+                let fileLocation = path.stringByAppendingPathComponent("test")
+
+                let sourceDate = JHDate()
+
+                NSKeyedArchiver.archiveRootObject([sourceDate], toFile: fileLocation)
+
+                let destinationDates = NSKeyedUnarchiver.unarchiveObjectWithFile(fileLocation) as? [JHDate]
+
+                expect(destinationDates).notTo(beNil())
+                expect(destinationDates!).to(haveCount(1))
+                let date = destinationDates![0]
+                expect(date) == sourceDate
+                expect(date.calendar) == sourceDate.calendar
+                expect(ObjectIdentifier(date)) != ObjectIdentifier(sourceDate)
+            }
+        }
+}
     
 }
 

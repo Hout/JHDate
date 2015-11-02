@@ -241,6 +241,24 @@ public class JHDate : NSObject {
         self.init(date: thisDate, calendar: components.calendar)
     }
 
+    // NSCoding initialiser
+    //
+    public required init?(coder aDecoder: NSCoder) {
+        date = aDecoder.decodeObjectOfClass(NSDate.self, forKey: "date")!
+        calendar = aDecoder.decodeObjectOfClass(NSCalendar.self, forKey: "calendar")!
+        formatter = aDecoder.decodeObjectOfClass(NSDateFormatter.self, forKey: "formatter")!
+    }
+
+    
+    // NSCoding coder
+    //
+    public func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(date, forKey: "date")
+        aCoder.encodeObject(calendar, forKey: "calendar")
+        aCoder.encodeObject(formatter, forKey: "formatter")
+    }
+
+    
     /// Time interval since the reference date at 1 January 2001
     ///
     /// - Returns: the number of seconds as an NSTimeInterval.
