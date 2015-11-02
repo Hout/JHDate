@@ -98,8 +98,26 @@ public extension JHDate {
     ///
     /// - seealso: [isDate:inSameDayAsDate:](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/occ/instm/NSCalendar/isDate:inSameDayAsDate:)
     ///
-    public func isEqualToDate(date: NSDate) -> Bool {
+    public func inSameDayAsDate(date: NSDate) -> Bool {
         return calendar.isDate(self.date, inSameDayAsDate: date)
+    }
+
+    /// Returns true when the given date is equal to the receiver.
+    /// Just the dates are compared. Calendars, time zones are irrelevant.
+    ///
+    /// - Parameters:
+    ///     - date: a date to compare against
+    ///
+    /// - Returns: a boolean indicating whether the receiver is equal to the given date
+    ///
+    /// - Remark: This used to be the infix ``func ==``, but since we are subclassing ``NSObject`` now
+    ///     we need to resolve this [differently](http://mgrebenets.github.io/swift/2015/06/21/equatable-nsobject-with-swift-2/).
+    ///
+    override public func isEqual(object: AnyObject?) -> Bool {
+        if let rhs = object as? JHDate {
+            return date.isEqualToDate(rhs.date)
+        }
+        return false
     }
 }
 
@@ -111,18 +129,6 @@ public extension JHDate {
 /// A type conforming to Comparable need only supply the < and == operators; default implementations of <=, >, >=, and != are supplied by the standard library:
 ///
 extension JHDate : Comparable {}
-
-/// Returns whether the given date is equal to the receiver.
-/// Just the dates are compared. Calendars, time zones are irrelevant.
-///
-/// - Parameters:
-///     - date: a date to compare against
-///
-/// - Returns: a boolean indicating whether the receiver is equal to the given date
-///
-public func ==(ldate: JHDate, rdate: JHDate) -> Bool {
-    return ldate.date.isEqualToDate(rdate.date)
-}
 
 /// Returns whether the given date is later than the receiver.
 /// Just the dates are compared. Calendars, time zones are irrelevant.

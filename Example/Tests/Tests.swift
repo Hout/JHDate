@@ -159,14 +159,11 @@ class JHDateSpec: QuickSpec {
                 it("should return a proper date") {
                     let timeZone = NSTimeZone(abbreviation: "GST")!
                     let date = JHDate(year: 1999, month: 12, day: 31, timeZone: timeZone)!
-                    let components = NSDateComponents()
-                    components.year = 1999
-                    components.month = 12
-                    components.day = 31
-                    components.timeZone = timeZone
-                    let expectedDate = date.calendar.dateFromComponents(components)
-
-                    expect(date) == JHDate(date: expectedDate, timeZone: timeZone)
+                    let components = date.components
+                    expect(components.year) == 1999
+                    expect(components.month) == 12
+                    expect(components.day) == 31
+                    expect(components.timeZone) == timeZone
                 }
 
             }
@@ -243,12 +240,7 @@ class JHDateSpec: QuickSpec {
                     expect(descriptions[2]) == "31-Dec-1999"
                     expect(descriptions[3]) == "AD"
                     expect(descriptions[4]) == "23:59:59.500"
-                    expect(descriptions[5]) == "GMT+1\nCalendar:"
-                    expect(descriptions[8]) == "zone:"
-                    expect(descriptions[9]) == "Europe/Paris"
-                    expect(descriptions[10]) == "(GMT+1)"
-                    expect(descriptions[11]) == "offset"
-                    expect(descriptions[12]) == "3600\nLocale:"
+                    expect(descriptions[5]) == "GMT+1"
                 }
             }
 
@@ -436,12 +428,10 @@ class JHDateSpec: QuickSpec {
 
             it("should add properly") {
                 let date = JHDate(year: 1999, month: 12, day: 31)!
-                print(date)
                 let testDate = date + 1.days
-                print(testDate)
                 let expectedDate = JHDate(year: 2000, month: 1, day: 1)
 
-                expect(testDate) == expectedDate
+                expect(testDate == expectedDate).to(beTrue())
             }
 
             it("should add properly") {
@@ -682,6 +672,16 @@ class JHDateSpec: QuickSpec {
                 expect(testDate.second) == 59
             }
             
+        }
+
+        context("Copying") {
+            it("should create a copy and not a reference") {
+                let a = JHDate()
+                let b = a.copy() as! JHDate
+
+                expect(a) == b
+                expect(ObjectIdentifier(a)) != ObjectIdentifier(b)
+            }
         }
     }
     
