@@ -331,17 +331,17 @@ class JHDateSpec: QuickSpec {
 
                 var date: JHDate!
                 beforeEach {
-                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(forSecondsFromGMT: 3600), locale: NSLocale(localeIdentifier: "nl_NL"))!
+                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "IST"), locale: NSLocale(localeIdentifier: "hi_IN"))!
                 }
 
                 it("should initiate default date formatter") {
-                    expect(date.toString()) == "31 dec. 1999 23:59:59"
+                    expect(date.toString()) == "३१/१२/१९९९, अ ११:५९:५९"
                 }
 
                 it("should assign calendar properly") {
                     let testCalendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
                     let testDate = JHDate(refDate: date, calendar: testCalendar)!
-                    expect(testDate.toString()) == "BE 2542 M12 31 23:59:59"
+                    expect(testDate.toString()) == "BE 2542 M12 31 19:29:59"
                 }
 
                 it("should assign locale properly") {
@@ -353,7 +353,7 @@ class JHDateSpec: QuickSpec {
                 it("should assign time zone properly") {
                     let testTimeZone = NSTimeZone(abbreviation: "EST")!
                     let testDate = JHDate(refDate: date, timeZone: testTimeZone)!
-                    expect(testDate.toString()) == "31 dec. 1999 17:59:59"
+                    expect(testDate.toString()) == "३१/१२/१९९९, अ १:२९:५९"
                 }
 
                 it("should return a proper string by default") {
