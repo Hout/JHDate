@@ -196,7 +196,7 @@ Decision | Rationale
 ------------- | -------------
 Do not include an initialiser from string  | That is too complicated with all the different ways of notation in the world. It would have too little benefit next to the currently available convenience intialisers instead.
 Do not attempt to mimic all properties and functions of the NSDateFormatter, NSDateComponents etc. E.g. NSDateFormatter's ``localizedStringFromDate`` or ``weekdaySymbols`` | Sometimes it is just easier to use the ``date`` property from ``JHDate`` instead.
-Equation ``==`` is on date values only | Hmmm, not sure about this one. Created an issue.
+Equation ``==`` is not for just the date value but for the whole object | Alike NSObject regulations; although objects do not have to be the same instance, they must contain equal properties
 
 ## Author
 
