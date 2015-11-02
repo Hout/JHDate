@@ -24,7 +24,7 @@ import Foundation
 
 // MARK: - Initialisations
 
-public class JHDate {
+public class JHDate : NSObject {
 
     /// Set to loop throuhg all NSCalendarUnit values
     ///
@@ -101,6 +101,9 @@ public class JHDate {
             date = aDate!
             calendar = aCalendar ?? NSCalendar.currentCalendar()
             formatter = aFormatter ?? NSDateFormatter()
+
+            super.init()
+
             if let thisTimeZone = aTimeZone {
                 timeZone = thisTimeZone
             }
