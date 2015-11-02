@@ -122,12 +122,14 @@ public class JHDate : NSObject {
         timeZone: NSTimeZone? = nil,
         locale: NSLocale? = nil) {
 
-            let theCalendar = calendar ?? refDate.calendar ?? NSCalendar.currentCalendar()
-            if let newTimeZone = timeZone { theCalendar.timeZone = newTimeZone }
-            if let newLocale = locale { theCalendar.locale = newLocale }
+            let newCalendar = calendar ?? refDate.calendar ?? NSCalendar.currentCalendar()
+            let newTimeZone = timeZone ?? refDate.timeZone ?? newCalendar.timeZone
+            newCalendar.timeZone = newTimeZone
+            let newLocale = locale ?? refDate.locale ?? newCalendar.locale
+            newCalendar.locale = newLocale
 
             // get components from reference date in new calendar
-            let components = theCalendar.components(JHDate.componentFlags, fromDate: refDate.date)
+            let components = newCalendar.components(JHDate.componentFlags, fromDate: refDate.date)
             if let newEra = era { components.era = newEra }
             if let newYear = year { components.year = newYear }
             if let newMonth = month { components.month = newMonth }
@@ -139,8 +141,8 @@ public class JHDate : NSObject {
             if let newMinute = minute { components.minute = newMinute }
             if let newSecond = second { components.second = newSecond }
             if let newNanosecond = nanosecond { components.nanosecond = newNanosecond }
-            components.calendar = theCalendar
-            components.timeZone = theCalendar.timeZone
+            components.calendar = newCalendar
+            components.timeZone = newTimeZone
             
             // determine way of conversion: year month day or year week weekday
             var ymdFactor = 0
@@ -164,7 +166,7 @@ public class JHDate : NSObject {
                 components.weekOfMonth = NSDateComponentUndefined
             }
 
-            self.init(components: components, locale: locale)
+            self.init(components: components, locale: newLocale)
     }
     
     
