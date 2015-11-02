@@ -99,6 +99,21 @@ newDate2.timeZone = NSTimeZone(abbreviation: "GST")!
 newDate2.calendar = NSCalendar(identifier: NSCalendarIdentifierIndian)!
 newDate2.timeZone = NSTimeZone(abbreviation: "IST")!
 
+//: #### Equations
+//: JHDate conforms to the Equatable protocol. I.e. you can compare with == for equality.
+newDate == newDate2
+newDate == newDate
+
+//: For equal date values, you should use x.isEqualToDate(y)
+newDate.dateStyle = .LongStyle
+let newDate3 = newDate.copy() as! JHDate
+newDate == newDate3
+newDate3.locale = NSLocale(localeIdentifier: "en_NZ")
+newDate == newDate3
+newDate.isEqualToDate(newDate3)
+newDate.toString()
+newDate3.toString()
+
 //: #### Comparisons
 //: JHDate conforms to the Comparable protocol. I.e. you can compare with <. <=, ==, >=, >
 newDate > newDate2

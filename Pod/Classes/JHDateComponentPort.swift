@@ -48,7 +48,7 @@ public extension JHDate {
     /// - Returns: An NSDateComponents object containing date decomposed into the components as specified.
     ///
     public var components : NSDateComponents {
-        return calendar.components(JHDate.componentFlags, fromDate: date)
+        return calendar.components(JHDate.componentFlags, fromDate: self.date)
     }
 
     /// Returns the value for an NSDateComponents object.

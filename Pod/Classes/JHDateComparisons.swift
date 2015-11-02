@@ -163,18 +163,6 @@ public extension JHDate {
             return false
         }
 
-        // But not the formatter... but its main values
-        let compareFormatter = compareDate.formatter
-        guard formatter.dateFormat == compareFormatter.dateFormat else {
-            return false
-        }
-        guard formatter.dateStyle == compareFormatter.dateStyle else {
-            return false
-        }
-        guard formatter.timeStyle == compareFormatter.timeStyle else {
-            return false
-        }
-
         // We have made it! They are equal!
         return true
     }

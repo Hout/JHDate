@@ -37,7 +37,7 @@ public extension JHDate {
     /// - note: This value is calculated in the context of the calendar of the receiver
     ///
     internal func addComponents(components: NSDateComponents) -> JHDate? {
-        let newDate = calendar.dateByAddingComponents(components, toDate: self.date, options: NSCalendarOptions.MatchStrictly)
+        let newDate = calendar.dateByAddingComponents(components, toDate: self.date, options: NSCalendarOptions(rawValue: 0))
         guard newDate != nil else {
             return nil
         }

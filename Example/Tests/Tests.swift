@@ -147,7 +147,7 @@ class JHDateSpec: QuickSpec {
                     let components = NSDateComponents()
                     let date = JHDate(components: components)!
 
-                    expect(date.year) == 2001
+                    expect(date.year) == 1
                     expect(date.month) == 1
                     expect(date.day) == 1
                     expect(date.hour) == 0
@@ -226,41 +226,46 @@ class JHDateSpec: QuickSpec {
                     }
                 }
 
-                it("should synchronise all calendar assignments") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
-                    expect(date.formatter.calendar) == date.calendar
-
-                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
-                    expect(date.formatter.calendar) == date.calendar
-                }
-
                 it("should synchronise all locale assignments") {
                     let date = JHDate(year: 1999, month: 12, day: 31)!
-                    expect(date.formatter.locale) == date.locale
-                    expect(date.calendar.locale) == date.locale
-
-                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
-                    expect(date.formatter.locale) == date.locale
-                    expect(date.calendar.locale) == date.locale
-
-                    date.locale = NSLocale(localeIdentifier: "af_ZA")
-                    expect(date.formatter.locale) == date.locale
                     expect(date.calendar.locale) == date.locale
                 }
 
                 it("should synchronise all time zone assignments") {
                     let date = JHDate(year: 1999, month: 12, day: 31)!
-                    expect(date.formatter.timeZone) == date.timeZone
-                    expect(date.calendar.timeZone) == date.timeZone
-
-                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
-                    expect(date.formatter.timeZone) == date.timeZone
-                    expect(date.calendar.timeZone) == date.timeZone
-
-                    date.timeZone = NSTimeZone(forSecondsFromGMT: 36000)
-                    expect(date.formatter.timeZone) == date.timeZone
                     expect(date.calendar.timeZone) == date.timeZone
                 }
+            }
+
+            context("conversions") {
+
+                it("should convert to another calendar") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, calendar: NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian))!
+                    let date2 = JHDate(refDate: date, calendar: NSCalendar(identifier: NSCalendarIdentifierHebrew))!
+
+                    expect(date2.day) == 22
+                    expect(date2.month) == 4
+                    expect(date2.year) == 5760
+                }
+                
+                it("should convert to another time zone") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, timeZone: NSTimeZone(abbreviation: "UTC"))!
+                    let date2 = JHDate(refDate: date, timeZone: NSTimeZone(abbreviation: "IST"))!
+
+                    expect(date2.minute) == 30
+                    expect(date2.hour) == 17
+                    expect(date2.day) == 31
+                    expect(date2.month) == 12
+                    expect(date2.year) == 1999
+                }
+                
+                it("should convert to another locale") {
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, locale: NSLocale(localeIdentifier: "nl_NL"))!
+                    let date2 = JHDate(refDate: date, locale: NSLocale(localeIdentifier: "en_US"))!
+
+                    expect(date2.toString(dateStyle: .MediumStyle)) == "Dec 31, 1999"
+                }
+                
             }
 
             context("descriptions") {
@@ -284,96 +289,82 @@ class JHDateSpec: QuickSpec {
 
             context("date formatter") {
 
-                it("should initiate default date formatter") {
-                    let testCalendar = NSCalendar(identifier: NSCalendarIdentifierGregorian)
-                    let testTimeZone = NSTimeZone(abbreviation: "CET")
-                    let testLocale = NSLocale(localeIdentifier: "nl_NL")
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: testCalendar, timeZone: testTimeZone, locale: testLocale)!
-                    let dateFormatter = NSDateFormatter()
-                    dateFormatter.calendar = testCalendar
-                    dateFormatter.timeZone = testTimeZone
-                    dateFormatter.locale = testLocale
+                var date: JHDate!
+                beforeEach {
+                    date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
+                }
 
-                    expect(date.dateFormat) == dateFormatter.dateFormat
-                    expect(date.dateStyle) == dateFormatter.dateStyle
-                    expect(date.timeStyle) == dateFormatter.timeStyle
-                    expect(date.formatter.calendar) == dateFormatter.calendar
-                    expect(date.formatter.timeZone.secondsFromGMT) == dateFormatter.timeZone.secondsFromGMT
+                it("should initiate default date formatter") {
+                    expect(date.toString()) == "31 dec. 1999 23:59:59"
                 }
 
                 it("should assign calendar properly") {
                     let testCalendar = NSCalendar(identifier: NSCalendarIdentifierBuddhist)!
-                    let jhdate = JHDate(calendar: testCalendar)
-                    expect(jhdate.formatter.calendar.calendarIdentifier) == testCalendar.calendarIdentifier
+                    let testDate = JHDate(refDate: date, calendar: testCalendar)!
+                    expect(testDate.toString()) == "BE 2542 M12 31 23:59:59"
                 }
 
                 it("should assign locale properly") {
                     let testLocale = NSLocale(localeIdentifier: "en_NZ")
-                    let jhdate = JHDate(locale: testLocale)
-                    expect(jhdate.formatter.locale) == testLocale
+                    let testDate = JHDate(refDate: date, locale: testLocale)!
+                    expect(testDate.toString()) == "31/12/1999, 11:59:59 PM"
                 }
 
                 it("should assign time zone properly") {
                     let testTimeZone = NSTimeZone(abbreviation: "EST")!
-                    let jhdate = JHDate(timeZone: testTimeZone)
-                    expect(jhdate.formatter.timeZone) == testTimeZone
+                    let testDate = JHDate(refDate: date, timeZone: testTimeZone)!
+                    expect(testDate.toString()) == "31 dec. 1999 17:59:59"
                 }
 
                 it("should return a proper string by default") {
                     let date = JHDate(year: 1999, month: 12, day: 31)!
-                    date.dateStyle = .MediumStyle
 
                     let formatter = NSDateFormatter()
                     formatter.dateStyle = .MediumStyle
+                    formatter.timeStyle = .MediumStyle
                     formatter.calendar = date.calendar
                     formatter.locale = date.locale
                     formatter.timeZone = date.timeZone
 
-                    expect(date.toString()) == formatter.stringFromDate(date.date)
+                    expect(date.toString(.MediumStyle)) == formatter.stringFromDate(date.date)
                 }
                 
                 it("should return a proper string with specified locale") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
-                    date.dateStyle = .MediumStyle
-                    date.locale = NSLocale(localeIdentifier: "uz_Cyrl_UZ")
+                    let date = JHDate(year: 1999, month: 12, day: 31, locale: NSLocale(localeIdentifier: "uz_Cyrl_UZ"))!
 
-                    expect(date.toString()) == "1999 Dek 31"
+                    expect(date.toString(dateStyle: .MediumStyle)) == "1999 Dek 31"
                 }
                 
                 it("should return a proper string with specified calendar") {
-                    let date = JHDate(year: 1999, month: 12, day: 31)!
-                    date.dateFormat = "dd MMM YYYY"
-                    date.calendar = NSCalendar(identifier: NSCalendarIdentifierHebrew)!
+                    let date = JHDate(year: 1999, month: 12, day: 31, calendar: NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian))!
+                    let date2 = JHDate(refDate: date, calendar: NSCalendar(identifier: NSCalendarIdentifierHebrew))!
 
-                    expect(date.toString()) == "22 Tevet 5760"
+                    expect(date2.day) == 22
+                    expect(date2.month) == 4
+                    expect(date2.year) == 5760
+                    expect(date2.toString(dateStyle: .MediumStyle)) == "AM 5760 Tevet 22"
                 }
                 
                 it("should return a proper string with specified timezone") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(abbreviation: "CET"), locale: NSLocale(localeIdentifier: "nl_NL"))!
-                    date.timeStyle = .MediumStyle
-                    date.timeZone = NSTimeZone(forSecondsFromGMT: 12345)
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 23, minute: 59, second: 59, nanosecond: 500000000, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian), timeZone: NSTimeZone(forSecondsFromGMT: 12345), locale: NSLocale(localeIdentifier: "nl_NL"))!
 
-                    expect(date.toString()) == "02:25:59"
+                    expect(date.toString(timeStyle: .LongStyle)) == "23:59:59 GMT+3:26"
                 }
                 
                 it("should return a proper date string with relative conversion") {
-                    let date = JHDate()
+                    let date = JHDate(locale: NSLocale(localeIdentifier: "fr_FR"))
                     let date2 = (date + 2.days)!
-                    date2.dateStyle = .MediumStyle
-                    date2.locale = NSLocale(localeIdentifier: "fr_FR")
                     expect(date2.toRelativeString()) == "après-demain"
-                    date2.locale = NSLocale(localeIdentifier: "nl_NL")
-                    expect(date2.toRelativeString()) == "Overmorgen"
                 }
 
             }
         }
 
-        context("comparisons") {
+        context("equations") {
 
             it("should return true for equating a different object with the same properties") {
                 let date1 = JHDate(year: 1999, month: 12, day: 31)!
-                let date2 = date1.copy() as! JHDate
+                let date2 = date1
 
                 expect(date1 == date2) == true
             }
@@ -394,29 +385,22 @@ class JHDateSpec: QuickSpec {
             
             it("should return false for equating objects with different calendars") {
                 let date1 = JHDate(year: 1999, month: 12, day: 31, calendar: NSCalendar(identifier: NSCalendarIdentifierGregorian))!
-                let date2 = date1.copy() as! JHDate
-                date2.calendar = NSCalendar(identifier: NSCalendarIdentifierChinese)!
+                let date2 = JHDate(refDate: date1, calendar: NSCalendar(identifier: NSCalendarIdentifierChinese))
 
                 expect(date1 == date2) == false
             }
             
             it("should return false for equating objects with different locales") {
                 let date1 = JHDate(year: 1999, month: 12, day: 31, locale: NSLocale(localeIdentifier: "en_UK"))!
-                let date2 = date1.copy() as! JHDate
-                date2.locale = NSLocale(localeIdentifier: "en_US")
+                let date2 = JHDate(refDate: date1, locale: NSLocale(localeIdentifier: "en_US"))
 
                 expect(date1 == date2) == false
             }
             
-            it("should return false for equating objects with different formatters") {
-                let date1 = JHDate(year: 1999, month: 12, day: 31)!
-                date1.dateStyle = .LongStyle
-                let date2 = date1.copy() as! JHDate
-                date2.dateStyle = .MediumStyle
+        }
 
-                expect(date1 == date2) == false
-            }
-            
+        context("comparisons") {
+
             it("should return true for greater than comparing") {
                 let date1 = JHDate(year: 1999, month: 12, day: 31)!
                 let date2 = JHDate(year: 1999, month: 12, day: 30)!
@@ -668,8 +652,8 @@ class JHDateSpec: QuickSpec {
             }
             
             it("should return start of week in USA") {
-                date.locale = NSLocale(localeIdentifier: "en_US")
-                let testDate = date.startOf(.WeekOfYear)!
+                let usaDate = JHDate(refDate: date, locale: NSLocale(localeIdentifier: "en_US"))!
+                let testDate = usaDate.startOf(.WeekOfYear)!
 
                 expect(testDate.year) == 1999
                 expect(testDate.month) == 12
@@ -761,7 +745,7 @@ class JHDateSpec: QuickSpec {
         context("Copying") {
             it("should create a copy and not a reference") {
                 let a = JHDate()
-                let b = a.copy() as! JHDate
+                let b = JHDate(refDate: a)!
 
                 expect(a) == b
                 expect(ObjectIdentifier(a)) != ObjectIdentifier(b)
