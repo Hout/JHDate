@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "JHDate"
-  s.version          = "0.4.0"
+  s.version          = "0.4.1"
 s.summary          = "Yet another Swift date class"
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -52,9 +52,9 @@ DESC
   s.requires_arc = true
 
   s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'JHDate' => ['Pod/Assets/*.png']
-  }
+  #s.resource_bundles = {
+  #    'JHDate' => ['Pod/Assets/*.png']
+  #}
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
