@@ -236,4 +236,38 @@ public extension JHDate {
         // return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
 
+    public func isInWeekend() -> Bool {
+        return calendar.isDateInWeekend(self.date)
+    }
+
+    public func thisWeekend() -> (startDate: JHDate, endDate: JHDate)? {
+        var weekendStart: NSDate?
+        var timeInterval: NSTimeInterval
+        if !calendar.rangeOfWeekendStartDate(&weekendStart, interval: &timeInterval, containingDate: self.date) {
+            return nil
+        }
+        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
+        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
+    }
+
+    public func previousWeekend() -> (startDate: JHDate, endDate: JHDate)? {
+        var weekendStart: NSDate?
+        var timeInterval: NSTimeInterval
+        if !calendar.nextWeekendStartDate(&weekendStart, interval: &timeInterval, options: NSCalendarOptions.SearchBackwards, afterDate: self.date) {
+            return nil
+        }
+        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
+        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
+    }
+
+    public func nextWeekend() -> (startDate: JHDate, endDate: JHDate)? {
+        var weekendStart: NSDate?
+        var timeInterval: NSTimeInterval
+        if !calendar.nextWeekendStartDate(&weekendStart, interval: &timeInterval, options: NSCalendarOptions(rawValue: 0), afterDate: self.date) {
+            return nil
+        }
+        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
+        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
+    }
+
 }
