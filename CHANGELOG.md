@@ -1,10 +1,21 @@
 # Change Log
 
-## [0.3.1](https://github.com/Hout/JHDate/tree/0.3.1) (2015-11-01)
+## [0.4.0](https://github.com/Hout/JHDate/tree/0.4.0) (2015-11-03)
 **Implemented enhancements:**
 
+- Implement protocol NSSecureCoding [\#10](https://github.com/Hout/JHDate/issues/10)
+- Implement protocol NSCopying [\#9](https://github.com/Hout/JHDate/issues/9)
+  ...and got rid of that too. Made JHDate immutable.
+- Add dateFormatter property [\#8](https://github.com/Hout/JHDate/issues/8)
+- Document thread safety [\#6](https://github.com/Hout/JHDate/issues/6)
 - Create README.playground [\#2](https://github.com/Hout/JHDate/issues/2)
 
+**Closed issues:**
+
+- IsEqual should compare entire object, not just the date [\#11](https://github.com/Hout/JHDate/issues/11)
+- Add support for OSX [\#7](https://github.com/Hout/JHDate/issues/7)
+
+## [0.3.1](https://github.com/Hout/JHDate/tree/0.3.1) (2015-11-01)
 ## [0.3.0](https://github.com/Hout/JHDate/tree/0.3.0) (2015-10-26)
 **Implemented enhancements:**
 

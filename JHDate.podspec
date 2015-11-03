@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "JHDate"
-  s.version          = "0.3.1"
+  s.version          = "0.4.0"
 s.summary          = "Yet another Swift date class"
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -23,18 +23,20 @@ s.summary          = "Yet another Swift date class"
 [![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 
-JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents. Thus offering date functions with a flexibility that I was looking for:
+JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. We are not there yet, but the intention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
 
 - Use the object as an NSDate. I.e. as an absolute time.
-- Contains a date (NSDate), a calendar (NSCalendar) and a timeZone (NSTimeZone) property
-- Offers NSDate & NSDateComponent vars & methods
+- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
+- Offers many NSDate & NSDateComponent vars & methods
 - Initialise a date with any combination of components
 - Use default values for initialisation if desired
 - Calendar & time zone can be changed, properties change along
+- Default date is `NSDate()`
 - Default calendar is `NSCalendar.currentCalendar()`
 - Default time zone is `NSTimeZone.localTimeZone()`
-- Implements the Comparable protocol betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Implements the Equatable & Comparable protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
 - implements date addition and subtraction operators with date components. E.g. `date + 2.days`
+- JHDate is immutable, so thread safe. It contains a constructor to easily create new ``JHDate`` occurrences with some properties adjusted.
 DESC
 
   s.homepage         = "https://github.com/Hout/JHDate"
