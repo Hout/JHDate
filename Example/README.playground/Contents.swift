@@ -12,6 +12,7 @@ JHDate is a wrapper around NSDate that exposes the properties of NSDateComponent
 - Date is fixed, calendar & time zone can be changed, properties change along
 - Implements the Comparable protocol betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
 - implements date addition and subtraction operators with date components. E.g. `date + 2.days`
+- JHDate is immutable, so thread safe. It contains a constructor to easily create new ``JHDate`` occurrences with some properties adjusted.
 
 ### Examples
 Check out the playground:
