@@ -1,6 +1,11 @@
 # Change Log
 
-## [0.4.0](https://github.com/Hout/JHDate/tree/0.4.0) (2015-11-03)
+## [0.4.2](https://github.com/Hout/JHDate/tree/0.4.2) (2015-11-03)
+**Implemented hotfix:**
+
+- Readme doc badge adjusted
+
+## [0.4.1](https://github.com/Hout/JHDate/tree/0.4.1) (2015-11-03)
 **Implemented hotfix:**
 
 - Podspec adjusted
