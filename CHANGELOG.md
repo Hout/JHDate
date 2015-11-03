@@ -1,6 +1,11 @@
 # Change Log
 
 ## [0.4.0](https://github.com/Hout/JHDate/tree/0.4.0) (2015-11-03)
+**Implemented hotfix:**
+
+- Podspec adjusted
+
+## [0.4.0](https://github.com/Hout/JHDate/tree/0.4.0) (2015-11-03)
 **Implemented enhancements:**
 
 - Implement protocol NSSecureCoding [\#10](https://github.com/Hout/JHDate/issues/10)
