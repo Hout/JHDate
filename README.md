@@ -1,7 +1,6 @@
 # JHDate
 
 [![Build Status](https://travis-ci.org/Hout/JHDate.svg?branch=master)](https://travis-ci.org/Hout/JHDate)
-[![Inline docs](http://inch-ci.org/github/Hout/JHDate.svg)](http://inch-ci.org/github/Hout/JHDate)
 [![Version](https://img.shields.io/cocoapods/v/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
