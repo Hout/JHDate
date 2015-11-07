@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F94F0AE1BEE2075001C1F9D /* JHDateEquationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F94F0AD1BEE2075001C1F9D /* JHDateEquationsTests.swift */; };
+		1F94F0B01BEE21D7001C1F9D /* JHDateHashableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F94F0AF1BEE21D7001C1F9D /* JHDateHashableTests.swift */; };
 		57F957372A7B70B397BE155E /* Pods_JHDate_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B62BBCA24402F8BDE2234D6 /* Pods_JHDate_Tests.framework */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		766BA9BA9B545713D23768B8 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E90DEC49A0DBEA9FBD6E266 /* Pods.framework */; };
@@ -17,6 +19,8 @@
 		1B62BBCA24402F8BDE2234D6 /* Pods_JHDate_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_JHDate_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E90DEC49A0DBEA9FBD6E266 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F5AE8F01BDE557800C90194 /* README.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = README.playground; sourceTree = "<group>"; };
+		1F94F0AD1BEE2075001C1F9D /* JHDateEquationsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JHDateEquationsTests.swift; sourceTree = "<group>"; };
+		1F94F0AF1BEE21D7001C1F9D /* JHDateHashableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JHDateHashableTests.swift; sourceTree = "<group>"; };
 		1FC2C8661BDD947800EF919F /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		2493412A56A8D623771CD441 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		5F66D3CAD45BF976E5A2779D /* Pods-JHDate_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JHDate_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-JHDate_Tests/Pods-JHDate_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -64,6 +68,8 @@
 			children = (
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				1F94F0AD1BEE2075001C1F9D /* JHDateEquationsTests.swift */,
+				1F94F0AF1BEE21D7001C1F9D /* JHDateHashableTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -227,6 +233,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				1F94F0AE1BEE2075001C1F9D /* JHDateEquationsTests.swift in Sources */,
+				1F94F0B01BEE21D7001C1F9D /* JHDateHashableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
