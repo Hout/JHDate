@@ -75,18 +75,6 @@ public extension JHDate {
         return calendar.isDateInWeekend(date)
     }
 
-    /// Returns whether the given date is on a weekday; i.e. it is not in the weekend.
-    ///
-    /// - Returns: a boolean indicating whether the receiver is on a weekday
-    ///
-    /// - note: This value is interpreted in the context of the calendar of the receiver
-    ///
-    /// - seealso: [isDateInWeekend:](xcdoc://?url=developer.apple.com/library/prerelease/ios/documentation/Cocoa/Reference/Foundation/Classes/NSCalendar_Class/index.html#//apple_ref/occ/instm/NSCalendar/isDateInWeekend:)
-    ///
-    public func isInWeekday() -> Bool {
-        return !self.isInWeekend()
-    }
-
     /// Returns whether the given date is on the same day as the receiver.
     ///
     /// - Parameters:
