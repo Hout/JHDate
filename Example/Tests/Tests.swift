@@ -95,13 +95,13 @@ class JHDateSpec: QuickSpec {
                 }
 
                 it("should report the maximum date") {
-                    let testDate = JHDate(year: 5, month: 2, day: 3)!
+                    let testDate = JHDate(year: 5, month: 2, day: 3, calendar: gregorianCalendar)!
                     let maxDate = JHDate.latestDate(
-                        JHDate(year: 1, month: 2, day: 3)!,
-                        JHDate(year: 2, month: 2, day: 3)!,
-                        JHDate(year: 3, month: 2, day: 3)!,
+                        JHDate(year: 1, month: 2, day: 3, calendar: gregorianCalendar)!,
+                        JHDate(year: 2, month: 2, day: 3, calendar: gregorianCalendar)!,
+                        JHDate(year: 3, month: 2, day: 3, calendar: gregorianCalendar)!,
                         testDate,
-                        JHDate(year: 4, month: 2, day: 3)!)
+                        JHDate(year: 4, month: 2, day: 3, calendar: gregorianCalendar)!)
                     expect(maxDate) == testDate
                 }
 
@@ -322,7 +322,7 @@ class JHDateSpec: QuickSpec {
                 }
                 
                 it("should convert to another time zone") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, timeZone: NSTimeZone(abbreviation: "UTC"))!
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, timeZone: NSTimeZone(abbreviation: "UTC"), calendar: gregorianCalendar)!
                     let date2 = JHDate(refDate: date, timeZone: NSTimeZone(abbreviation: "IST"))!
 
                     expect(date2.minute) == 30
