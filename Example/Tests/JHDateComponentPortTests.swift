@@ -16,7 +16,12 @@ class JHDateComponentPortSpec: QuickSpec {
 
     override func spec() {
 
-        describe("JHDate") {
+        describe("JHDateComponentPort") {
+
+            var gregorianCalendar: NSCalendar!
+            beforeEach {
+                gregorianCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+            }
 
             context("component initialisation") {
 
@@ -55,7 +60,7 @@ class JHDateComponentPortSpec: QuickSpec {
 
                 it("should return a midnight date with nil YWD initialisation") {
                     let localeNL = NSLocale(localeIdentifier: "nl_NL")
-                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4, locale: localeNL)!
+                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4, calendar: gregorianCalendar, locale: localeNL)!
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
@@ -64,7 +69,7 @@ class JHDateComponentPortSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
-                    expect(date.calendar) == NSCalendar.currentCalendar()
+                    expect(date.calendar) == gregorianCalendar
                     expect(date.timeZone) == NSTimeZone.defaultTimeZone()
                 }
 
@@ -89,6 +94,7 @@ class JHDateComponentPortSpec: QuickSpec {
 
                 it("should return a date of 0001-01-01 00:00:00.000 UTC for component initialisation") {
                     let components = NSDateComponents()
+                    components.calendar = gregorianCalendar
                     let date = JHDate(components: components)!
 
                     expect(date.year) == 1
@@ -109,49 +115,195 @@ class JHDateComponentPortSpec: QuickSpec {
                     expect(components.day) == 31
                     expect(components.timeZone) == timeZone
                 }
-                
+
             }
-            
-            context("Gregorian weekends") {
+
+            context("In Gregorian weekends") {
 
                 it("should return a proper weekend value for a Saturday") {
-                    let date = JHDate(year: 2015, month: 11, day: 7)!
+                    let date = JHDate(year: 2015, month: 11, day: 7, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == true
                 }
 
                 it("should return a proper weekend value for a Sunday") {
-                    let date = JHDate(year: 2015, month: 11, day: 8)!
+                    let date = JHDate(year: 2015, month: 11, day: 8, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == true
                 }
 
                 it("should return a proper weekend value for a Monday") {
-                    let date = JHDate(year: 2015, month: 11, day: 9)!
+                    let date = JHDate(year: 2015, month: 11, day: 9, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == false
                 }
 
                 it("should return a proper weekend value for a Tuesday") {
-                    let date = JHDate(year: 2015, month: 11, day: 10)!
+                    let date = JHDate(year: 2015, month: 11, day: 10, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == false
                 }
 
                 it("should return a proper weekend value for a Wednesday") {
-                    let date = JHDate(year: 2015, month: 11, day: 11)!
+                    let date = JHDate(year: 2015, month: 11, day: 11, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == false
                 }
 
                 it("should return a proper weekend value for a Thursday") {
-                    let date = JHDate(year: 2015, month: 11, day: 12)!
+                    let date = JHDate(year: 2015, month: 11, day: 12, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == false
                 }
 
                 it("should return a proper weekend value for a Friday") {
-                    let date = JHDate(year: 2015, month: 11, day: 13)!
+                    let date = JHDate(year: 2015, month: 11, day: 13, calendar: gregorianCalendar)!
                     expect(date.isInWeekend()) == false
                 }
 
             }
 
+            context("Next weekend") {
+
+                var expectedStartDate: JHDate!
+                var expectedEndDate: JHDate!
+                beforeEach {
+                    expectedStartDate = JHDate(year: 2015, month: 11, day: 7, calendar: gregorianCalendar)!
+                    expectedEndDate = (expectedStartDate + 1.days)!.endOf(.Day)!
+                }
+
+                it("should return next weekend on Friday") {
+                    let date = JHDate(year: 2015, month: 11, day: 6, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return next weekend on Thursday") {
+                    let date = JHDate(year: 2015, month: 11, day: 5, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return next weekend on Wednesday") {
+                    let date = JHDate(year: 2015, month: 11, day: 4, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return next weekend on Tuesday") {
+                    let date = JHDate(year: 2015, month: 11, day: 3, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return week's weekend on Monday") {
+                    let date = JHDate(year: 2015, month: 11, day: 2, calendar: gregorianCalendar)!
+                    
+                    let weekend = date.nextWeekend()!
+                    
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return next week's weekend on Sunday") {
+                    let date = JHDate(year: 2015, month: 11, day: 1, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return next week's weekend on Saturday") {
+                    let date = JHDate(year: 2015, month: 10, day: 31, calendar: gregorianCalendar)!
+
+                    let weekend = date.nextWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+                
+            }
+
+            context("Previous weekend") {
+
+                var expectedStartDate: JHDate!
+                var expectedEndDate: JHDate!
+                beforeEach {
+                    expectedStartDate = JHDate(year: 2015, month: 10, day: 31, calendar: gregorianCalendar)!
+                    expectedEndDate = (expectedStartDate + 1.days)!.endOf(.Day)!
+                }
+
+                it("should return last week's weekend on Sunday") {
+                    let date = JHDate(year: 2015, month: 11, day: 8, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return last week's weekend on Saturday") {
+                    let date = JHDate(year: 2015, month: 11, day: 7, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return last weekend on Friday") {
+                    let date = JHDate(year: 2015, month: 11, day: 7, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return last weekend on Thursday") {
+                    let date = JHDate(year: 2015, month: 11, day: 5, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return last weekend on Wednesday") {
+                    let date = JHDate(year: 2015, month: 11, day: 4, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return last weekend on Tuesday") {
+                    let date = JHDate(year: 2015, month: 11, day: 3, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+
+                it("should return week's weekend on Monday") {
+                    let date = JHDate(year: 2015, month: 11, day: 2, calendar: gregorianCalendar)!
+
+                    let weekend = date.previousWeekend()!
+
+                    expect(weekend.startDate) == expectedStartDate
+                    expect(weekend.endDate) == expectedEndDate
+                }
+            }
         }
     }
-
 }
+

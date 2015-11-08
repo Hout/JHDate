@@ -229,11 +229,30 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public var leapMonth: Bool {
-        let range = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
-        return range.length == 29
+        // Library function for leap contains a bug for Gregorian calendars, implemented workaround
+        if calendar.calendarIdentifier == NSCalendarIdentifierGregorian && year >= 1582 {
+            let range = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
+            return range.length == 29
+        }
 
-        // Wanted to use the library function below, but that does not work properly...
-        // return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
+        // For other calendars:
+        return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
+    }
+
+    /// Boolean value that indicates whether the year is a leap year.
+    /// ``YES`` if the year is a leap year, ``NO`` otherwise
+    ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var leapYear: Bool {
+        // Library function for leap contains a bug for Gregorian calendars, implemented workaround
+        if calendar.calendarIdentifier == NSCalendarIdentifierGregorian {
+            let testDate = JHDate(refDate: self, month: 2, day: 1)!
+            return testDate.leapMonth
+        }
+
+        // For other calendars:
+        return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
 
     /// Returns two JHDate objects indicating the start and the end of the next weekend after the date
@@ -250,24 +269,26 @@ public extension JHDate {
         return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
     }
 
+    // TODO: Documentation
     public func previousWeekend() -> (startDate: JHDate, endDate: JHDate)? {
-        var weekendStart: NSDate?
-        var timeInterval: NSTimeInterval = 0
-        if !calendar.nextWeekendStartDate(&weekendStart, interval: &timeInterval, options: NSCalendarOptions.SearchBackwards, afterDate: self.date) {
-            return nil
-        }
-        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
-        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
+        let date = (self - 9.days)!
+        return date.nextWeekend()
     }
 
+    // TODO: Documentation
     public func nextWeekend() -> (startDate: JHDate, endDate: JHDate)? {
         var weekendStart: NSDate?
         var timeInterval: NSTimeInterval = 0
         if !calendar.nextWeekendStartDate(&weekendStart, interval: &timeInterval, options: NSCalendarOptions(rawValue: 0), afterDate: self.date) {
             return nil
         }
-        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
-        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
+
+        // Subtract 10000 nanoseconds to distinguish from Midnigth on the next Monday for the isEqualDate function of NSDate
+        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval - 0.00001)
+
+        let startDate = JHDate(date: weekendStart!, calendar: calendar, timeZone: timeZone, locale: locale)
+        let endDate = JHDate(date: weekendEnd, calendar: calendar, timeZone: timeZone, locale: locale)
+        return (startDate, endDate)
     }
 
 }
