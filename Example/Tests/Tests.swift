@@ -16,14 +16,18 @@ class JHDateSpec: QuickSpec {
 
     override func spec() {
 
+        var gregorianCalendar: NSCalendar!
+        beforeEach {
+            gregorianCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
+        }
+
         describe("JHDate") {
 
             context("NSDate, calendar & time zone initialisation") {
 
                 it("should have the default time zone in the current calendar") {
-                    let calendar = NSCalendar.currentCalendar()
                     let expectedTimeZone = NSTimeZone.defaultTimeZone()
-                    expect(calendar.timeZone) == expectedTimeZone
+                    expect(gregorianCalendar.timeZone) == expectedTimeZone
                 }
 
                 it("should have the the current calendar as default") {
@@ -51,7 +55,7 @@ class JHDateSpec: QuickSpec {
                 }
 
                 it("should return the current date") {
-                    let jhDate = JHDate()
+                    let jhDate = JHDate(calendar: gregorianCalendar)
                     let nsDate = NSDate()
 
                     let timeZone = NSTimeZone.defaultTimeZone()
@@ -59,7 +63,7 @@ class JHDateSpec: QuickSpec {
                     expect(jhDate.timeIntervalSinceReferenceDate) ≈ (expectedInterval, 1)
                 }
 
-                it("should return the sepcified date") {
+                it("should return the specified date") {
                     let calendar = NSCalendar(identifier: NSCalendarIdentifierJapanese)!
                     let components = NSDateComponents()
                     components.year = 2345
@@ -67,7 +71,7 @@ class JHDateSpec: QuickSpec {
                     components.day = 5
                     let nsDate = calendar.dateFromComponents(components)!
 
-                    let jhDate = JHDate(date: nsDate)
+                    let jhDate = JHDate(date: nsDate, calendar: gregorianCalendar)
 
                     let expectedInterval = NSTimeInterval(Double(nsDate.timeIntervalSinceReferenceDate) + Double(calendar.timeZone.secondsFromGMTForDate(nsDate)))
                     expect(jhDate.timeIntervalSinceReferenceDate) == expectedInterval
@@ -78,14 +82,14 @@ class JHDateSpec: QuickSpec {
 
                 it("should return a zero time interval for 1-Jan-2001 00:00:00.000 UTC") {
                     let refDate = NSDate(timeIntervalSinceReferenceDate: 0)
-                    let date = JHDate(date: refDate, timeZone: NSTimeZone(forSecondsFromGMT: 0))
+                    let date = JHDate(date: refDate, calendar: gregorianCalendar, timeZone: NSTimeZone(forSecondsFromGMT: 0))
 
                     expect(date.timeIntervalSinceReferenceDate) == 0
                 }
                 
                 it("should return a 3600 time interval for 1-Jan-2001 00:00:00.000 CET") {
                     let refDate = NSDate(timeIntervalSinceReferenceDate: 0)
-                    let date = JHDate(date: refDate, timeZone: NSTimeZone(abbreviation: "CET"))
+                    let date = JHDate(date: refDate, calendar: gregorianCalendar, timeZone: NSTimeZone(abbreviation: "CET"))
 
                     expect(date.timeIntervalSinceReferenceDate) == 3600
                 }
@@ -151,7 +155,7 @@ class JHDateSpec: QuickSpec {
 
                 it("should return a midnight date with nil YWD initialisation") {
                     let localeNL = NSLocale(localeIdentifier: "nl_NL")
-                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4, locale: localeNL)!
+                    let date = JHDate(yearForWeekOfYear: 1492, weekOfYear: 15, weekday: 4, calendar: gregorianCalendar, locale: localeNL)!
 
                     expect(date.year) == 1492
                     expect(date.month) == 4
@@ -160,7 +164,7 @@ class JHDateSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
-                    expect(date.calendar) == NSCalendar.currentCalendar()
+                    expect(date.calendar) == gregorianCalendar
                     expect(date.timeZone) == NSTimeZone.defaultTimeZone()
                 }
 
@@ -185,15 +189,11 @@ class JHDateSpec: QuickSpec {
 
                 it("should return a date of 0001-01-01 00:00:00.000 UTC for component initialisation") {
                     let components = NSDateComponents()
+                    let nsDate = NSCalendar.currentCalendar().dateFromComponents(components)
                     let date = JHDate(components: components)!
+                    let expectedDate = JHDate(date: nsDate)
 
-                    expect(date.year) == 1
-                    expect(date.month) == 1
-                    expect(date.day) == 1
-                    expect(date.hour) == 0
-                    expect(date.minute) == 0
-                    expect(date.second) == 0
-                    expect(date.nanosecond) == 0
+                    expect(date) == expectedDate
                 }
 
                 it("should return a proper date") {
@@ -250,11 +250,13 @@ class JHDateSpec: QuickSpec {
                     expect(date.nanosecond) < 600000000
                 }
 
-                it("should return proper leap month") {
+                it("should return proper leap month for Gregorian calendars") {
                     for year in 1500...2500 {
-                        let date = JHDate(year: year, month: 2, day: 1)!
+                        let date = JHDate(year: year, month: 2, day: 1, calendar: gregorianCalendar)!
 
-                        if year % 400 == 0 {
+                        if year < 1582 {
+                            expect(date.leapMonth).to(beFalse(), description: "years < 1582 have no leap year")
+                        } else if year % 400 == 0 {
                             expect(date.leapMonth).to(beTrue(), description: "year \(year) is divisable by 400 and is leap")
                         } else if year % 100 == 0 {
                             expect(date.leapMonth).to(beFalse(), description: "year \(year) is divisable by 100 and is NOT leap")
@@ -265,6 +267,37 @@ class JHDateSpec: QuickSpec {
                         }
                     }
                 }
+                
+                it("should not return leap month for non-February months in Gregorian calendars") {
+                    for month in 1...12 {
+                        // Skip February
+                        if month == 2 { continue }
+
+                        let date = JHDate(year: 2000, month: month, day: 1, calendar: gregorianCalendar)!
+
+                        expect(date.leapMonth).to(beFalse(), description: "months other than February can never be leap months")
+                    }
+                }
+                
+                it("should return proper leap year for Gregorian calendars") {
+                    for year in 1500...2500 {
+                        let date = JHDate(year: year, month: 8, day: 1, calendar: gregorianCalendar)!
+
+                        if year < 1582 {
+                            expect(date.leapYear).to(beFalse(), description: "years < 1582 have no leap year")
+                        } else if year % 400 == 0 {
+                            expect(date.leapYear).to(beTrue(), description: "year \(year) is divisable by 400 and is leap")
+                        } else if year % 100 == 0 {
+                            expect(date.leapYear).to(beFalse(), description: "year \(year) is divisable by 100 and is NOT leap")
+                        } else if year % 4 == 0 {
+                            expect(date.leapYear).to(beTrue(), description: "year \(year) is divisable by 4 and is leap")
+                        } else {
+                            expect(date.leapYear).to(beFalse(), description: "year \(year) is NOT divisable by 4 and is NOT leap")
+                        }
+                    }
+                }
+                
+                // TODO: Leap tests for non-gregorian calendars
 
                 it("should synchronise all locale assignments") {
                     let date = JHDate(year: 1999, month: 12, day: 31)!
@@ -300,8 +333,8 @@ class JHDateSpec: QuickSpec {
                 }
                 
                 it("should convert to another locale") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, locale: NSLocale(localeIdentifier: "nl_NL"))!
-                    let date2 = JHDate(refDate: date, locale: NSLocale(localeIdentifier: "en_US"))!
+                    let date = JHDate(year: 1999, month: 12, day: 31, hour: 12, calendar: gregorianCalendar, locale: NSLocale(localeIdentifier: "nl_NL"))!
+                    let date2 = JHDate(refDate: date, calendar: gregorianCalendar, locale: NSLocale(localeIdentifier: "en_US"))!
 
                     expect(date2.toString(dateStyle: .MediumStyle)) == "Dec 31, 1999"
                 }
@@ -370,7 +403,7 @@ class JHDateSpec: QuickSpec {
                 }
                 
                 it("should return a proper string with specified locale") {
-                    let date = JHDate(year: 1999, month: 12, day: 31, locale: NSLocale(localeIdentifier: "uz_Cyrl_UZ"))!
+                    let date = JHDate(year: 1999, month: 12, day: 31, calendar: gregorianCalendar, locale: NSLocale(localeIdentifier: "uz_Cyrl_UZ"))!
 
                     expect(date.toString(dateStyle: .MediumStyle)) == "1999 Dek 31"
                 }
@@ -577,7 +610,7 @@ class JHDateSpec: QuickSpec {
 
             var date: JHDate!
             beforeEach {
-                date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17, locale: NSLocale(localeIdentifier: "nl_NL"))!
+                date = JHDate(year: 1999, month: 12, day: 31, hour: 14, minute: 15, second: 16, nanosecond: 17, calendar: gregorianCalendar, locale: NSLocale(localeIdentifier: "nl_NL"))!
             }
             it("should return nil for nanosecond") {
                 let testDate = date.startOf(.Nanosecond)

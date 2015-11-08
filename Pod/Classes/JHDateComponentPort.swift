@@ -229,11 +229,30 @@ public extension JHDate {
     /// - note: This value is interpreted in the context of the calendar with which it is used
     ///
     public var leapMonth: Bool {
-        let range = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
-        return range.length == 29
+        // Library function for leap contains a bug for Gregorian calendars, implemented workaround
+        if calendar.calendarIdentifier == NSCalendarIdentifierGregorian && year >= 1582 {
+            let range = calendar.rangeOfUnit(NSCalendarUnit.Day, inUnit: NSCalendarUnit.Month, forDate: date)
+            return range.length == 29
+        }
 
-        // Wanted to use the library function below, but that does not work properly...
-        // return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
+        // For other calendars:
+        return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
+    }
+
+    /// Boolean value that indicates whether the year is a leap year.
+    /// ``YES`` if the year is a leap year, ``NO`` otherwise
+    ///
+    /// - note: This value is interpreted in the context of the calendar with which it is used
+    ///
+    public var leapYear: Bool {
+        // Library function for leap contains a bug for Gregorian calendars, implemented workaround
+        if calendar.calendarIdentifier == NSCalendarIdentifierGregorian {
+            let testDate = JHDate(refDate: self, month: 2, day: 1)!
+            return testDate.leapMonth
+        }
+
+        // For other calendars:
+        return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
 
 }
