@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.5.0](https://github.com/Hout/JHDate/tree/0.5.0) (2015-11-08)
+
+- Implemented ``Hashable & Equatable`` protocols
+- Separate implementation files for various protocols
+- Added weekend functions: ``nextWeekend(), previousWeekend, inWeekend`` incl all tests
+- Made testing possible with other default regions, calendars
+- Fixed leap month bug & added leap year function for Gregorian calendars
+- In `EndOf` function, use 10 microseconds before the start of the next unit. This is the minimal difference where `NSDate.isEqualDate` returns a `false` value 
+
+
 ## [0.4.2](https://github.com/Hout/JHDate/tree/0.4.2) (2015-11-03)
 **Implemented hotfix:**
 

@@ -2,17 +2,20 @@
 
 # JHDate
 
-JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents. Thus offering date functions with a flexibility that I was looking for:
+JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. The best way to see it is as a localised (locale) moment (date) in a time zone (timeZone)within a calendrical system (calendar). Th eintention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
 
 - Use the object as an NSDate. I.e. as an absolute time.
-- Contains a date (NSDate), a calendar (NSCalendar) and a timeZone (NSTimeZone) property
-- Offers many NSDate, NSCalendar & NSDateComponent vars & funcs
-- Initialise a date with many combinations of components
-- Use default values for initialisation if desired
-- Date is fixed, calendar & time zone can be changed, properties change along
-- Implements the Comparable protocol betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Offers many NSDate & NSDateComponent vars & methods
+- Initialise a date with any combination of components
+- Default date is `NSDate()`
+- Default calendar is `NSCalendar.currentCalendar()`
+- Default time zone is `NSTimeZone.localTimeZone()`
+- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
+- Implements the ``Equatable`` & ``Comparable`` protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Implements the ``Hashable`` protocol so the date can be used as a key in a Dictionary.
 - implements date addition and subtraction operators with date components. E.g. `date + 2.days`
 - JHDate is immutable, so thread safe. It contains a constructor to easily create new ``JHDate`` occurrences with some properties adjusted.
+
 
 ### Examples
 Check out the playground:
@@ -43,8 +46,13 @@ let weekDate = JHDate(yearForWeekOfYear: 2016, weekOfYear: 1, weekday: 1)!
 let hebrewCalendar = NSCalendar(identifier: NSCalendarIdentifierHebrew)
 let hebrewDate = JHDate(year: 2011, month: 2, day: 11, hour: 14, calendar: hebrewCalendar)!
 
-//: Create today's date
+//: Create today's date at start of day
 let today = JHDate.today()
+
+//: Create a period that is the next weekend
+let weekend = today.nextWeekend()!
+let weekendStart = weekend.startDate
+let weekendEnd = weekend.endDate
 
 //: #### Calculations
 //: One week later
@@ -152,6 +160,20 @@ indiaDate1 < date2
 indiaDate1.isEqualToDate(date1)
 
 //: QED: same outcome!
+
+
+//: #### Collections
+
+//: Use as a key in a dictionary
+var birthdays = [JHDate: String]()
+birthdays[JHDate(year: 1997, month: 5, day: 7)!] = "Jerry"
+birthdays[JHDate(year: 1999, month: 12, day: 14)!] = "Ken"
+birthdays[JHDate(year: 1990, month: 12, day: 5)!] = "Sinterklaas"
+birthdays.sort({ (a: (date: JHDate, String), b: (date: JHDate, String)) -> Bool in
+    return a.date < b.date
+})
+
+
 
 //: #### Display
 //: JHDate conforms to the ConvertString protocol
