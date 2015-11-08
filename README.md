@@ -5,18 +5,17 @@
 [![License](https://img.shields.io/cocoapods/l/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 [![Platform](https://img.shields.io/cocoapods/p/JHDate.svg?style=flat)](http://cocoapods.org/pods/JHDate)
 
-JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. We are not there yet, but the intention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
+JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. The best way to see it is as a localised (locale) moment (date) in a time zone (timeZone)within a calendrical system (calendar). Th eintention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
 
 - Use the object as an NSDate. I.e. as an absolute time. 
-- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
 - Offers many NSDate & NSDateComponent vars & methods
 - Initialise a date with any combination of components
-- Use default values for initialisation if desired
-- Calendar & time zone can be changed, properties change along
 - Default date is `NSDate()`
 - Default calendar is `NSCalendar.currentCalendar()`
 - Default time zone is `NSTimeZone.localTimeZone()`
-- Implements the Equatable & Comparable protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
+- Implements the ``Equatable`` & ``Comparable`` protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Implements the ``Hashable`` protocol so the date can be used as a key in a Dictionary.
 - implements date addition and subtraction operators with date components. E.g. `date + 2.days`
 - JHDate is immutable, so thread safe. It contains a constructor to easily create new ``JHDate`` occurrences with some properties adjusted.
 
@@ -49,8 +48,13 @@ let weekDate = JHDate(yearForWeekOfYear: 2016, weekOfYear: 1, weekday: 1)!
 let hebrewCalendar = NSCalendar(identifier: NSCalendarIdentifierHebrew)
 let hebrewDate = JHDate(year: 2011, month: 2, day: 11, hour: 14, calendar: hebrewCalendar)!
 
-//: Create today's date
+//: Create today's date at start of day
 let today = JHDate.today()
+
+//: Create a period that is the next weekend
+let weekend = today.nextWeekend()!
+let weekendStart = weekend.startDate
+let weekendEnd = weekend.endDate
 
 //: #### Calculations
 //: One week later
@@ -67,6 +71,11 @@ let newDate = oneWeekLater.withValue(14, forUnit: .Hour)!
 
 //: ... or with a combination of components
 let newDate2 = oneWeekLater.withValues([(13, .Hour), (12, .Minute)])!
+
+//: #### NSDate
+newDate.timeIntervalSinceReferenceDate
+JHDate.earliestDate(newDate, newDate2, today, something)
+JHDate.latestDate(newDate, newDate2, today, something)
 
 //: #### Components
 newDate2.year
@@ -154,9 +163,23 @@ indiaDate1.isEqualToDate(date1)
 
 //: QED: same outcome!
 
+
+//: #### Collections
+
+//: Use as a key in a dictionary
+var birthdays = [JHDate: String]()
+birthdays[JHDate(year: 1997, month: 5, day: 7)!] = "Jerry"
+birthdays[JHDate(year: 1999, month: 12, day: 14)!] = "Ken"
+birthdays[JHDate(year: 1990, month: 12, day: 5)!] = "Sinterklaas"
+birthdays.sort({ (a: (date: JHDate, String), b: (date: JHDate, String)) -> Bool in
+return a.date < b.date
+})
+
+
+
 //: #### Display
 //: JHDate conforms to the ConvertString protocol
-print(date2.description)
+date2.description
 
 //: Various NSDateFormatter properties are ported
 let date3 = (date1 + 7.hours)!
@@ -165,6 +188,7 @@ date3.toString(.LongStyle)
 date3.toString(dateStyle: .LongStyle)
 date3.toString(timeStyle: .LongStyle)
 date3.toString("dd-MMM-yyyy HH:mm")
+(JHDate() + 1.days)!.toRelativeString()
 ```
 
 ## Usage
