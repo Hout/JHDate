@@ -8,6 +8,6 @@
 
 extension JHDate {
     override public var hashValue: Int {
-        return timeIntervalSinceReferenceDate.hashValue ^ calendar.hashValue ^ timeZone.hashValue ^ locale.hashValue
+        return date.hashValue ^ calendar.hashValue ^ timeZone.hashValue ^ locale.hashValue
     }
 }
