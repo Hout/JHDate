@@ -255,27 +255,23 @@ public extension JHDate {
         return calendar.components([.Day, .Month, .Year], fromDate: date).leapMonth
     }
 
-    /// Returns two JHDate objects indicating the start and the end of the next weekend after the date
+    /// Returns two JHDate objects indicating the start and the end of the previous weekend before the date.
     ///
-    /// - note: 
-   ///
-   public func thisWeekend() -> (startDate: JHDate, endDate: JHDate)? {
-        var weekendStart: NSDate?
-        var timeInterval: NSTimeInterval = 0
-        if !calendar.rangeOfWeekendStartDate(&weekendStart, interval: &timeInterval, containingDate: self.date) {
-            return nil
-        }
-        let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval)
-        return (JHDate(date: weekendStart!), JHDate(date: weekendEnd))
-    }
-
-    // TODO: Documentation
+    /// - Returns: a tuple of two JHDate objects indicating the start and the end of the next weekend after the date.
+    ///
+    /// - Note: The weekend returned when the receiver is in a weekend is the previous weekend not the current one.
+    ///
     public func previousWeekend() -> (startDate: JHDate, endDate: JHDate)? {
         let date = (self - 9.days)!
         return date.nextWeekend()
     }
 
-    // TODO: Documentation
+    /// Returns two JHDate objects indicating the start and the end of the next weekend after the date.
+    ///
+    /// - Returns: a tuple of two JHDate objects indicating the start and the end of the next weekend after the date.
+    ///
+    /// - Note: The weekend returned when the receiver is in a weekend is the next weekend not the current one.
+    ///
     public func nextWeekend() -> (startDate: JHDate, endDate: JHDate)? {
         var weekendStart: NSDate?
         var timeInterval: NSTimeInterval = 0
