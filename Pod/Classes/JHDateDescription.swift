@@ -14,7 +14,7 @@ extension JHDate {
 
     /// Returns a full description of the class
     ///
-    override public var description: String {
+    public var description: String {
         var descriptor: [String] = []
 
         let dateFormatter = NSDateFormatter()

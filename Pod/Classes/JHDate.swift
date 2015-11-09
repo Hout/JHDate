@@ -24,7 +24,7 @@ import Foundation
 
 // MARK: - Initialisations
 
-public class JHDate : NSObject {
+public struct JHDate {
 
     /// Set to loop throuhg all NSCalendarUnit values
     ///
@@ -64,6 +64,7 @@ public class JHDate : NSObject {
     ///     - date:       the date to assign, default = NSDate() (that is the current time)
     ///     - calendar:   the calendar to work with to assign, default = the current calendar
     ///     - timeZone:   the time zone to work with, default is the default time zone
+    ///     - locale:     the locale to work with, default is the current locale
     ///
     public init(date aDate: NSDate? = nil,
         calendar aCalendar: NSCalendar? = nil,
@@ -73,8 +74,6 @@ public class JHDate : NSObject {
             calendar = aCalendar ?? NSCalendar.currentCalendar()
             timeZone = aTimeZone ?? NSTimeZone.defaultTimeZone()
             locale = aLocale ?? aCalendar?.locale ?? NSLocale.currentLocale()
-
-            super.init()
 
             // Assign calendar fields
             calendar.timeZone = timeZone
@@ -90,7 +89,7 @@ public class JHDate : NSObject {
     ///     - timeZone:   the time zone to work with, default is the default time zone
     ///     - locale:     the locale to work with, default is the current locale
     ///
-    public convenience init(copyDate: JHDate) {
+    public init(copyDate: JHDate) {
         self.init(date: copyDate.date, calendar: copyDate.calendar, timeZone: copyDate.timeZone, locale: copyDate.locale)
     }
 
@@ -106,7 +105,7 @@ public class JHDate : NSObject {
     /// Date and time property parameters can be used to alter the reference date properies in the context
     /// of the calendar, locale and time zone
     ///
-    public convenience init?(refDate: JHDate,
+    public init?(refDate: JHDate,
         era: Int? = nil,
         year: Int? = nil,
         month: Int? = nil,
@@ -182,7 +181,7 @@ public class JHDate : NSObject {
     ///
     /// - SeeAlso: [dateFromComponents](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDateComponents_Class/)
     ///
-    public convenience init?(
+    public init?(
         components: NSDateComponents,
         locale aLocale: NSLocale? = nil) {
 
@@ -205,7 +204,7 @@ public class JHDate : NSObject {
     ///     - timeZone:   the time zone to work with, default is the default time zone
     ///     - locale:     the locale to work with, default is the current locale
     ///
-    public convenience init?(
+    public init?(
         era: Int? = nil,
         year: Int? = nil,
         month: Int? = nil,
@@ -246,7 +245,7 @@ public class JHDate : NSObject {
     ///     - timeZone:   the time zone to work with, default is the default time zone
     ///     - locale:     the locale to work with, default is the current locale
     ///
-    public convenience init?(
+    public init?(
         era: Int? = nil,
         yearForWeekOfYear: Int? = nil,
         weekOfYear: Int? = nil,
@@ -277,34 +276,13 @@ public class JHDate : NSObject {
     }
     
 
-    // MARK: - NSCoding protocol 
-
-    /// NSCoding initialiser for archiving and unarchiving
-    ///
-    public required init?(coder aDecoder: NSCoder) {
-        date = aDecoder.decodeObjectOfClass(NSDate.self, forKey: "date")!
-        calendar = aDecoder.decodeObjectOfClass(NSCalendar.self, forKey: "calendar")!
-        timeZone = aDecoder.decodeObjectOfClass(NSTimeZone.self, forKey: "timeZone")!
-        locale = aDecoder.decodeObjectOfClass(NSLocale.self, forKey: "locale")!
-    }
-
-
-    // NSCoding coder
-    //
-    public func encodeWithCoder(aCoder: NSCoder) {
-        aCoder.encodeObject(date, forKey: "date")
-        aCoder.encodeObject(calendar, forKey: "calendar")
-        aCoder.encodeObject(timeZone, forKey: "timeZone")
-        aCoder.encodeObject(locale, forKey: "locale")
-    }
-
     // MARK: - helper funcs
 
     /// Create a default date components to use internally with the init with date components
     ///
     /// - Returns: date components that contain the reference date (1 January 2001, midnight in the current time zone)
     ///
-    internal class func defaultComponents() -> NSDateComponents {
+    internal static func defaultComponents() -> NSDateComponents {
         let referenceDate = NSDate(timeIntervalSinceReferenceDate: NSTimeInterval(0))
         let thisCalendar = NSCalendar.currentCalendar()
         let UTC = NSTimeZone(forSecondsFromGMT: 0)

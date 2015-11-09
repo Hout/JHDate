@@ -6,8 +6,8 @@
 //
 //
 
-extension JHDate {
-    override public var hashValue: Int {
+extension JHDate : Hashable {
+    public var hashValue: Int {
         return date.hashValue ^ calendar.hashValue ^ timeZone.hashValue ^ locale.hashValue
     }
 }
