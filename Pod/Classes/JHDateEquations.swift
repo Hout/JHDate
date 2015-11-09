@@ -21,9 +21,6 @@ extension JHDate : Equatable {}
 ///
 /// - Returns: a boolean indicating whether the receiver is equal to the given date
 ///
-/// - Remark: This used to be the infix ``func ==``, but since we are subclassing ``NSObject`` now
-///     we need to resolve this [differently](http://mgrebenets.github.io/swift/2015/06/21/equatable-nsobject-with-swift-2/).
-///
 public func ==(left: JHDate, right: JHDate) -> Bool {
 
     // Compare the content, first the date

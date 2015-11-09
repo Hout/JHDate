@@ -26,15 +26,15 @@ s.summary          = "Yet another Swift date class"
 JHDate is a wrapper around NSDate that exposes the properties of NSDateComponents, NSCalendar, NSTimeZone, NSLocale and NSDateFormatter. We are not there yet, but the intention is to replace your occurrence of NSDate with JHDate and get the same functionality plus lots of local date/calendar/time zone/formatter goodies. Thus offering date functions with a flexibility that I was looking for when creating this library:
 
 - Use the object as an NSDate. I.e. as an absolute time.
-- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
 - Offers many NSDate & NSDateComponent vars & methods
 - Initialise a date with any combination of components
-- Use default values for initialisation if desired
-- Calendar & time zone can be changed, properties change along
 - Default date is `NSDate()`
 - Default calendar is `NSCalendar.currentCalendar()`
-- Default time zone is `NSTimeZone.localTimeZone()`
-- Implements the Equatable & Comparable protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Default time zone is `NSTimeZone.defaultTimeZone()`
+- Default locale is `NSLocale.currentLocale()`
+- Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
+- Implements the ``Equatable`` & ``Comparable`` protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
+- Implements the ``Hashable`` protocol so the date can be used as a key in a Dictionary.
 - implements date addition and subtraction operators with date components. E.g. `date + 2.days`
 - JHDate is immutable, so thread safe. It contains a constructor to easily create new ``JHDate`` occurrences with some properties adjusted.
 DESC

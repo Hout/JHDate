@@ -12,7 +12,8 @@ JHDate is a wrapper around NSDate that exposes the properties of NSDateComponent
 - Initialise a date with any combination of components
 - Default date is `NSDate()`
 - Default calendar is `NSCalendar.currentCalendar()`
-- Default time zone is `NSTimeZone.localTimeZone()`
+- Default time zone is `NSTimeZone.defaultTimeZone()`
+- Default locale is `NSLocale.currentLocale()`
 - Contains a date (NSDate), a calendar (NSCalendar), a locale (NSLocale) and a timeZone (NSTimeZone) property
 - Implements the ``Equatable`` & ``Comparable`` protocols betwen dates with operators. E.g. `==, !=, <, >, <=, >=`
 - Implements the ``Hashable`` protocol so the date can be used as a key in a Dictionary.

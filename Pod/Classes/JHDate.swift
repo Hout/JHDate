@@ -64,6 +64,7 @@ public struct JHDate {
     ///     - date:       the date to assign, default = NSDate() (that is the current time)
     ///     - calendar:   the calendar to work with to assign, default = the current calendar
     ///     - timeZone:   the time zone to work with, default is the default time zone
+    ///     - locale:     the locale to work with, default is the current locale
     ///
     public init(date aDate: NSDate? = nil,
         calendar aCalendar: NSCalendar? = nil,
