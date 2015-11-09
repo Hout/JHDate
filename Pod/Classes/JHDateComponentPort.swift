@@ -17,7 +17,7 @@ public extension JHDate {
     ///
     /// - Returns: the date of today at midnight (00:00) in the current calendar and default time zone.
     ///
-    public class func today() -> JHDate {
+    public static func today() -> JHDate {
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Era, .Year, .Month, .Day, .Calendar, .TimeZone], fromDate: NSDate())
         let date = calendar.dateFromComponents(components)!
@@ -28,7 +28,7 @@ public extension JHDate {
     ///
     /// - Returns: the date of yesterday at midnight (00:00) in the current calendar and default time zone.
     ///
-    public class func yesterday() -> JHDate {
+    public static func yesterday() -> JHDate {
         return (today() - 1.days)!
     }
 
@@ -36,7 +36,7 @@ public extension JHDate {
     ///
     /// - Returns: the date of tomorrow at midnight (00:00) in the current calendar and default time zone.
     ///
-    public class func tomorrow() -> JHDate {
+    public static func tomorrow() -> JHDate {
         return (today() + 1.days)!
     }
 

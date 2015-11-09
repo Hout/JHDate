@@ -35,7 +35,7 @@ extension JHDate {
     ///
     /// - Returns: A ``JHDate`` object representing a date in the distant past (in terms of centuries).
     ///
-    public class func distantFuture() -> JHDate {
+    public static func distantFuture() -> JHDate {
         return JHDate(date: NSDate.distantFuture())
     }
 
@@ -43,7 +43,7 @@ extension JHDate {
     ///
     /// - Returns: A ``JHDate`` object representing a date in the distant future (in terms of centuries).
     ///
-    public class func distantPast() -> JHDate {
+    public static func distantPast() -> JHDate {
         return JHDate(date: NSDate.distantPast())
     }
 
@@ -56,7 +56,7 @@ extension JHDate {
     ///
     /// - Returns: a ``JHDate`` object representing a date that is the earliest from a given range of dates.
     ///
-    public class func earliestDate(dates: JHDate ...) -> JHDate {
+    public static func earliestDate(dates: JHDate ...) -> JHDate {
         var currentMinimum = JHDate.distantFuture()
         for thisDate in dates {
             if currentMinimum > thisDate {
@@ -75,7 +75,7 @@ extension JHDate {
     ///
     /// - Returns: a ``JHDate`` object representing a date that is the latest from a given range of dates.
     ///
-    public class func latestDate(dates: JHDate ...) -> JHDate {
+    public static func latestDate(dates: JHDate ...) -> JHDate {
         var currentMaximum = JHDate.distantPast()
         for thisDate in dates {
             if currentMaximum < thisDate {
