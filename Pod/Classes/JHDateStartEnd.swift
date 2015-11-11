@@ -119,7 +119,7 @@ public extension JHDate {
     ///
     public func endOf(unit: NSCalendarUnit) -> JHDate? {
         let nextDate = calendar.dateByAddingUnit(unit, value: 1, toDate: self.date, options: NSCalendarOptions(rawValue: 0))!
-        let nextJHDate = JHDate(date: nextDate, calendar: calendar, timeZone: timeZone)
+        let nextJHDate = JHDate(date: nextDate, region: region)
         let nextDateStart = nextJHDate.startOf(unit)!
         // Use 10000 nanosecond before the occurrence of the next unit. This is the minimal time difference that
         // is noticed in NSDate.isEqualToDate
@@ -127,7 +127,7 @@ public extension JHDate {
         guard newDate != nil else {
             return nil
         }
-        return JHDate(date: newDate!, calendar: self.calendar, timeZone: self.timeZone)
+        return JHDate(date: newDate!, region: region)
     }
     
 }

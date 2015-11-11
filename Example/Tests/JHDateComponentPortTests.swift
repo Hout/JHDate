@@ -18,18 +18,13 @@ class JHDateComponentPortSpec: QuickSpec {
 
         describe("JHDateComponentPort") {
 
-            var gregorianCalendar: NSCalendar!
-            beforeEach {
-                gregorianCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-            }
+            let netherlands = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "CET", localeID: "nl_NL")
+            let utc = DateRegion(calendarID: NSCalendarIdentifierGregorian, timeZoneID: "UTC", localeID: "en_UK")
 
             context("component initialisation") {
 
                 it("should return a midnight date with nil YMD initialisation with UTC time zone") {
-                    let UTCTimeZone = NSTimeZone(forSecondsFromGMT: 0)
-                    let date = JHDate(year: 1912, month: 6, day: 23, timeZone: UTCTimeZone)!
-                    let calendar = date.calendar
-                    calendar.timeZone = UTCTimeZone
+                    let date = JHDate(year: 1912, month: 6, day: 23, region: utc)!
 
                     expect(date.year) == 1912
                     expect(date.month) == 6
@@ -38,8 +33,7 @@ class JHDateComponentPortSpec: QuickSpec {
                     expect(date.minute) == 0
                     expect(date.second) == 0
                     expect(date.nanosecond) == 0
-                    expect(date.calendar) == calendar
-                    expect(date.timeZone) == UTCTimeZone
+                    expect(date.region) == utc
                 }
 
 

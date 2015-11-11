@@ -36,7 +36,7 @@ extension JHDate {
     /// - Returns: A ``JHDate`` object representing a date in the distant past (in terms of centuries).
     ///
     public static func distantFuture() -> JHDate {
-        return JHDate(date: NSDate.distantFuture())
+        return JHDate(date: NSDate.distantFuture(), region: nil)
     }
 
     /// Creates and returns a JHDate object representing a date in the distant future (in terms of centuries).
@@ -44,7 +44,7 @@ extension JHDate {
     /// - Returns: A ``JHDate`` object representing a date in the distant future (in terms of centuries).
     ///
     public static func distantPast() -> JHDate {
-        return JHDate(date: NSDate.distantPast())
+        return JHDate(date: NSDate.distantPast(), region: nil)
     }
 
     /// Returns a JHDate object representing a date that is the earliest from a given range of dates.

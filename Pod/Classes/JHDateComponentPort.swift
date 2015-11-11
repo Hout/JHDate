@@ -13,33 +13,6 @@ import Foundation
 
 public extension JHDate {
 
-    /// Today's date
-    ///
-    /// - Returns: the date of today at midnight (00:00) in the current calendar and default time zone.
-    ///
-    public static func today() -> JHDate {
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components([.Era, .Year, .Month, .Day, .Calendar, .TimeZone], fromDate: NSDate())
-        let date = calendar.dateFromComponents(components)!
-        return JHDate(date: date)
-    }
-
-    /// Yesterday's date
-    ///
-    /// - Returns: the date of yesterday at midnight (00:00) in the current calendar and default time zone.
-    ///
-    public static func yesterday() -> JHDate {
-        return (today() - 1.days)!
-    }
-
-    /// Tomorrow's date
-    ///
-    /// - Returns: the date of tomorrow at midnight (00:00) in the current calendar and default time zone.
-    ///
-    public static func tomorrow() -> JHDate {
-        return (today() + 1.days)!
-    }
-
     /// Returns a NSDateComponents object containing a given date decomposed into components:
     ///     day, month, year, hour, minute, second, nanosecond, timeZone, calendar,
     ///     yearForWeekOfYear, weekOfYear, weekday<s>, quarter</s> and weekOfMonth.
@@ -100,7 +73,7 @@ public extension JHDate {
         guard newDate != nil else {
             return nil
         }
-        return JHDate(date: newDate!, calendar: self.calendar, timeZone: self.timeZone)
+        return JHDate(date: newDate!, region: region)
     }
 
     /// The number of era units for the receiver.
@@ -282,8 +255,8 @@ public extension JHDate {
         // Subtract 10000 nanoseconds to distinguish from Midnigth on the next Monday for the isEqualDate function of NSDate
         let weekendEnd = weekendStart!.dateByAddingTimeInterval(timeInterval - 0.00001)
 
-        let startDate = JHDate(date: weekendStart!, calendar: calendar, timeZone: timeZone, locale: locale)
-        let endDate = JHDate(date: weekendEnd, calendar: calendar, timeZone: timeZone, locale: locale)
+        let startDate = JHDate(date: weekendStart!, region: region)
+        let endDate = JHDate(date: weekendEnd, region: region)
         return (startDate, endDate)
     }
 

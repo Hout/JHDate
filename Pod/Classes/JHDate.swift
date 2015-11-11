@@ -42,68 +42,66 @@ public struct JHDate {
     ///
     public let date: NSDate
 
+    // TODO: docs
+    public let region: DateRegion
+
     /// Calendar to interpret date values. You can alter the calendar to adjust the representation of date to your needs.
     ///
-    public let calendar: NSCalendar
+    public var calendar: NSCalendar { return region.calendar }
 
     /// Time zone to interpret date values
     /// Because the time zone is part of calendar, this is a shortcut to that variable.
     /// You can alter the time zone to adjust the representation of date to your needs.
     ///
-    public let timeZone: NSTimeZone
+    public var timeZone: NSTimeZone { return region.timeZone }
 
     /// Locale to interpret date values
     /// Because the locale is part of calendar, this is a shortcut to that variable.
     /// You can alter the locale to adjust the representation of date to your needs.
     ///
-    public let locale: NSLocale
+    public var locale: NSLocale { return region.locale }
 
     /// Initialise with a date, a calendar and/or a time zone
     ///
     /// - Parameters:
     ///     - date:       the date to assign, default = NSDate() (that is the current time)
-    ///     - calendar:   the calendar to work with to assign, default = the current calendar
-    ///     - timeZone:   the time zone to work with, default is the default time zone
-    ///     - locale:     the locale to work with, default is the current locale
+    ///     - region:     the date region to work with to assign, default = the current date region
     ///
-    public init(date aDate: NSDate? = nil,
-        calendar aCalendar: NSCalendar? = nil,
-        timeZone aTimeZone: NSTimeZone? = nil,
-        locale aLocale: NSLocale? = nil) {
+    public init(date aDate: NSDate? = nil, region aRegion: DateRegion? = nil) {
             date = aDate ?? NSDate()
-            calendar = aCalendar ?? NSCalendar.currentCalendar()
-            timeZone = aTimeZone ?? NSTimeZone.defaultTimeZone()
-            locale = aLocale ?? aCalendar?.locale ?? NSLocale.currentLocale()
-
-            // Assign calendar fields
-            calendar.timeZone = timeZone
-            calendar.locale = locale
+            region = aRegion ?? DateRegion()
     }
-    
-    
-    /// Create a copy JHDate
+
+    /// Initialise with date components
     ///
     /// - Parameters:
-    ///     - date:       the date to assign, default = NSDate() (that is the current time)
-    ///     - calendar:   the calendar to work with to assign, default = the current calendar
-    ///     - timeZone:   the time zone to work with, default is the default time zone
-    ///     - locale:     the locale to work with, default is the current locale
+    ///     - components: date components according to which the date will be set.
+    ///         Default values are these of the reference date.
     ///
-    public init(copyDate: JHDate) {
-        self.init(date: copyDate.date, calendar: copyDate.calendar, timeZone: copyDate.timeZone, locale: copyDate.locale)
+    /// - Returns: a new instance of JHDate. If a date cannot be constructed from
+    ///         the components, a nil value will be returned.
+    ///
+    /// - SeeAlso: [dateFromComponents](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDateComponents_Class/)
+    ///
+    public init?(components: NSDateComponents) {
+        region = DateRegion(calendar: components.calendar, timeZone: components.timeZone, locale: components.calendar?.locale)
+        if let newDate = region.calendar.dateFromComponents(components) {
+            date = newDate
+        } else {
+            return nil
+        }
     }
 
-    /// Initialise with a date, a calendar and/or a time zone. This initialiser can be used to copy a date while 
+
+    /// Initialise with a date, a calendar and/or a time zone. This initialiser can be used to copy a date while
     /// setting certain properties.
     ///
     /// - Parameters:
     ///     - date:       the date to assign, default = NSDate() (that is the current time)
-    ///     - calendar:   the calendar to work with to assign, default = the current calendar
-    ///     - timeZone:   the time zone to work with, default is the default time zone
-    ///     - locale:     the locale to work with, default is the current locale
+    ///     - region:     the date region to work with to assign, default = the current date region
     ///
     /// Date and time property parameters can be used to alter the reference date properies in the context
-    /// of the calendar, locale and time zone
+    /// of the date region
     ///
     public init?(refDate: JHDate,
         era: Int? = nil,
@@ -117,18 +115,12 @@ public struct JHDate {
         minute: Int? = nil,
         second: Int? = nil,
         nanosecond: Int? = nil,
-        calendar: NSCalendar? = nil,
-        timeZone: NSTimeZone? = nil,
-        locale: NSLocale? = nil) {
+        region aRegion: DateRegion? = nil) {
 
-            let newCalendar = calendar ?? refDate.calendar ?? NSCalendar.currentCalendar()
-            let newTimeZone = timeZone ?? refDate.timeZone ?? newCalendar.timeZone
-            newCalendar.timeZone = newTimeZone
-            let newLocale = locale ?? refDate.locale ?? newCalendar.locale
-            newCalendar.locale = newLocale
+            let newRegion = aRegion ?? refDate.region ?? DateRegion()
 
             // get components from reference date in new calendar
-            let components = newCalendar.components(JHDate.componentFlags, fromDate: refDate.date)
+            let components = newRegion.calendar.components(JHDate.componentFlags, fromDate: refDate.date)
             if let newEra = era { components.era = newEra }
             if let newYear = year { components.year = newYear }
             if let newMonth = month { components.month = newMonth }
@@ -140,8 +132,8 @@ public struct JHDate {
             if let newMinute = minute { components.minute = newMinute }
             if let newSecond = second { components.second = newSecond }
             if let newNanosecond = nanosecond { components.nanosecond = newNanosecond }
-            components.calendar = newCalendar
-            components.timeZone = newTimeZone
+            components.calendar = newRegion.calendar
+            components.timeZone = newRegion.timeZone
             
             // determine way of conversion: year month day or year week weekday
             var ymdFactor = 0
@@ -165,35 +157,10 @@ public struct JHDate {
                 components.weekOfMonth = NSDateComponentUndefined
             }
 
-            self.init(components: components, locale: newLocale)
+            self.init(components: components)
     }
     
     
-    /// Initialise with date components
-    ///
-    /// - Parameters:
-    ///     - components: date components according to which the date will be set.
-    ///         Default values are these of the reference date.
-    ///     - locale:     the locale to work with, default is the current locale
-    ///
-    /// - Returns: a new instance of JHDate. If a date cannot be constructed from
-    ///         the components, a nil value will be returned.
-    ///
-    /// - SeeAlso: [dateFromComponents](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSDateComponents_Class/)
-    ///
-    public init?(
-        components: NSDateComponents,
-        locale aLocale: NSLocale? = nil) {
-
-            let theCalendar = components.calendar ?? NSCalendar.currentCalendar()
-            let thisDate = theCalendar.dateFromComponents(components)
-            guard thisDate != nil else {
-                return nil
-            }
-            self.init(date: thisDate, calendar: components.calendar, timeZone: components.timeZone, locale: aLocale)
-    }
-    
-
     /// Initialise with year month day date components
     /// Parameters are interpreted based on the context of the calendar, time zone and locale.
     /// The ``day`` parameter is compulsory. The other parameters can be left out
@@ -213,9 +180,9 @@ public struct JHDate {
         minute: Int? = nil,
         second: Int? = nil,
         nanosecond: Int? = nil,
-        timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
-        locale aLocale: NSLocale? = nil) {
+        region aRegion: DateRegion? = nil) {
+
+            let newRegion = aRegion ?? DateRegion()
 
             let defaultComponents = JHDate.defaultComponents()
 
@@ -228,10 +195,10 @@ public struct JHDate {
             components.minute = minute ?? defaultComponents.minute ?? NSDateComponentUndefined
             components.second = second ?? defaultComponents.second ?? NSDateComponentUndefined
             components.nanosecond = nanosecond ?? defaultComponents.nanosecond ?? NSDateComponentUndefined
-            components.timeZone = timeZone ?? defaultComponents.timeZone
-            components.calendar = calendar ?? defaultComponents.calendar
+            components.timeZone = newRegion.timeZone
+            components.calendar = newRegion.calendar
 
-            self.init(components: components, locale: aLocale)
+            self.init(components: components)
     }
     
     
@@ -254,9 +221,9 @@ public struct JHDate {
         minute: Int? = nil,
         second: Int? = nil,
         nanosecond: Int? = nil,
-        timeZone: NSTimeZone? = nil,
-        calendar: NSCalendar? = nil,
-        locale aLocale: NSLocale? = nil) {
+        region aRegion: DateRegion? = nil) {
+
+            let newRegion = aRegion ?? DateRegion()
 
             let defaultComponents = JHDate.defaultComponents()
 
@@ -269,10 +236,10 @@ public struct JHDate {
             components.minute = minute ?? defaultComponents.minute ?? NSDateComponentUndefined
             components.second = second ?? defaultComponents.second ?? NSDateComponentUndefined
             components.nanosecond = nanosecond ?? defaultComponents.nanosecond ?? NSDateComponentUndefined
-            components.timeZone = timeZone ?? defaultComponents.timeZone
-            components.calendar = calendar ?? defaultComponents.calendar
+            components.timeZone = newRegion.timeZone
+            components.calendar = newRegion.calendar
 
-            self.init(components: components, locale: aLocale)
+            self.init(components: components)
     }
     
 

@@ -41,7 +41,7 @@ public extension JHDate {
         guard newDate != nil else {
             return nil
         }
-        return JHDate(date: newDate!, calendar: self.calendar, timeZone: self.timeZone)
+        return JHDate(date: newDate!, region: region)
     }
 }
 
