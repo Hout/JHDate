@@ -8,7 +8,9 @@
 
 Pod::Spec.new do |s|
   s.name             = "JHDate"
-  s.version          = "0.5.0"
+  s.version          = "0.5.1"
+s.deprecated_in_favor_of = 'DateInRegion'
+
 s.summary          = "Yet another Swift date class"
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
