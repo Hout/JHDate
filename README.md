@@ -203,7 +203,7 @@ The test code requires Quick and Nimble to be implemented. You can do so by runn
 
 ## Installation
 
-### Cocoapods
+### CocoaPods
 JHDate is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
